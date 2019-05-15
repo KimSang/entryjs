@@ -70,7 +70,7 @@ Entry.rq_robot = {
     },
     id: 'FFFF',
     name: 'rq_robot',
-    url: 'http://www.lego.com/ko-kr/mindstorms/about-ev3',
+    url: 'https://www.robobuilder.co.kr/',
     imageName: 'rq_robot.png',
     title: {
         ko: 'RQ 로봇',
@@ -82,128 +82,133 @@ Entry.rq_robot.setLanguage = function() {
     return {
         ko: {
             template: {
-                rq_get_sensor_value: '%1 의 값',
-                rq_touch_sensor: '%1 의 터치센서가 작동되었는가?',
-                rq_button_pressed: '%1 버튼이 눌려져있는가?',
-                rq_color_sensor: '%1 의 %2 값',
-                rq_motor_power: '%1 의 값을 %2 으로 출력 %3',
-                rq_motor_power_on_time: '%1 의 값을 %2 초 동안 %3 으로 출력 %4',
-                rq_motor_degrees: '%1 의 값을 %2 으로  %3 도 만큼 회전 %4',
-                rq_status_led: 'LED 색깔을 %1 (으)로 정하기 %2',
+            
+                rq_move_dc_motor : '회전모터 %1의 회전방향은 %2, 속도는 %3' ,
+                rq_set_dc_motor_position : '왼쪽 바퀴 %1 오른쪽 바퀴 %2 (으)로 정하기',
+                rq_stop_dc_motor : '모터 정지',
+                
+                rq_move_sam3_motor : '서보 모터 %1의 회전 방향은 %2, 속도는 %3',
+                rq_set_sam3_motor_position : '서보 모터 %1의 위치값 %2',
+                rq_on_sam3_led : '서보 모터 %1의 LED 켜기',
+                rq_ofF_sam3_led : '서보 모터 %2의 LED 끄기',
+                rq_move_sam3_motor_manual : '서보모터 %1 수동 동작',
+                rq_get_sam3_motor_position : '서보모터 %1의 위치값',
+            
+                rq_sound_sensor: '소리센서',
+                rq_infrared_ray_sensor : '%1번 적외선 센서',
+                rq_touch_sensor : '%1번 터치 센서',
+            
+                rq_play_sound : '%1 소리 출력',
+                rq_play_sound_second : '%1(으)로 %2초 연주하기',
+                rq_stop_sound : '소리 끄기',
+            
+                rq_on_led : 'LED %1의 %2 켜기',
+                rq_off_led : 'LED %1 끄기',
+            
+                rq_motion : '동작 호출 %1',
             },
         },
         en: {
             template: {
-                rq_get_sensor_value: "%1's value",
-                rq_touch_sensor: "%1's touch sensor activated?",
-                rq_button_pressed: "%1's button pressed?",
-                rq_color_sensor: "%1's %2 value",
-                rq_motor_power: "%1's value print as %2 %3",
-                rq_motor_power_on_time: "%1's value for %2seconds %3 printed %4",
-                rq_motor_degrees: "%1's value in %2 direction turn %3 degrees %4",
-                rq_status_led: 'Set status light to %1 %2',
+
+                rq_move_dc_motor : '회전모터 %1의 회전방향은 %2, 속도는 %3' ,
+                rq_set_dc_motor_position : '왼쪽 바퀴 %1 오른쪽 바퀴 %2 (으)로 정하기',
+                rq_stop_dc_motor : '모터 정지',
+                
+                rq_move_sam3_motor : '서보 모터 %1의 회전 방향은 %2, 속도는 %3',
+                rq_set_sam3_motor_position : '서보 모터 %1의 위치값 %2',
+                rq_on_sam3_led : '서보 모터 %1의 LED 켜기',
+                rq_ofF_sam3_led : '서보 모터 %2의 LED 끄기',
+                rq_move_sam3_motor_manual : '서보모터 %1 수동 동작',
+                rq_get_sam3_motor_position : '서보모터 %1의 위치값',
+            
+                rq_sound_sensor: '소리센서',
+                rq_infrared_ray_sensor : '%1번 적외선 센서',
+                rq_touch_sensor : '%1번 터치 센서',
+            
+                rq_play_sound : '%1 소리 출력',
+                rq_play_sound_second : '%1(으)로 %2초 연주하기',
+                rq_stop_sound : '소리 끄기',
+            
+                rq_on_led : 'LED %1의 %2 켜기',
+                rq_off_led : 'LED %1 끄기',
+            
+                rq_motion : '동작 호출 %1',
             },
         },
     };
 };
 Entry.rq_robot.blockMenuBlocks = [
-    'rq_get_sensor_value',
+
+    'rq_move_dc_motor',
+    'rq_set_dc_motor_position',
+    'rq_stop_dc_motor',
+    
+    'rq_move_sam3_motor',
+    'rq_set_sam3_motor_position',
+    'rq_on_sam3_led',
+    'rq_ofF_sam3_led',
+    'rq_move_sam3_motor_manual',
+    'rq_get_sam3_motor_position',
+
+    'rq_sound_sensor',
+    'rq_infrared_ray_sensor',
     'rq_touch_sensor',
-    'rq_button_pressed',
-    'rq_color_sensor',
-    'rq_motor_power',
-    'rq_motor_power_on_time',
-    'rq_motor_degrees',
-    'rq_status_led',
+
+    'rq_play_sound',
+    'rq_play_sound_second',
+    'rq_stop_sound',
+
+    'rq_on_led',
+    'rq_off_led',
+
+    'rq_motion',
 ];
 Entry.rq_robot.getBlocks = function() {
     return {
-
-        rq_color_sensor: {
+        rq_move_dc_motor: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#fff',
-            skeleton: 'basic_string_field',
+            skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['1', '1'], ['2', '2'], ['3', '3'], ['4', '4']],
-                    value: '1',
+                    options: [['왼쪽', 'LEFT'], ['오른쪽', 'RIGHT'], ],
+                    value: 'LEFT',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
-                    options: [['RGB', 'RGB'], ['R', 'R'], ['G', 'G'], ['B', 'B']],
-                    value: 'RGB',
+                    options: [['시계', 'CW'], ['반시계', 'CCW'], ],
+                    value: 'CW',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-            ],
-            events: {},
-            def: {
-                params: [null, null],
-                type: 'rq_color_sensor',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-                RGB: 1,
-            },
-            class: 'rq_sensor',
-            //isNotFor: ['rq_robot'],
-            func: function(sprite, script) {
-                var port = script.getStringField('PORT', script);
-                var rgb = script.getStringField('RGB', script);
-                var portData = Entry.hw.getDigitalPortValue(script.getNumberField('PORT', script));
-                var result = '';
-                if (portData.type == Entry.rq_robot.deviceTypes.Color) {
-                    if (portData.siValue == 0) {
-                        result = '';
-                    } else {
-                        switch (rgb) {
-                            case 'RGB':
-                                result = Entry.rq_robot.colorSensorValue[portData.siValue];
-                                break;
-                            case 'R':
-                                result = Entry.rq_robot.colorSensorValue[portData.siValue].substring(
-                                    0,
-                                    2
-                                );
-                                break;
-                            case 'G':
-                                result = Entry.rq_robot.colorSensorValue[portData.siValue].substring(
-                                    2,
-                                    4
-                                );
-                                break;
-                            case 'B':
-                                result = Entry.rq_robot.colorSensorValue[portData.siValue].substring(
-                                    4,
-                                    6
-                                );
-                                break;
-                        }
-                    }
-                } else {
-                    result = '컬러 센서 아님';
-                }
-                return result;
-            },
-        },
-        rq_get_sensor_value: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#fff',
-            skeleton: 'basic_string_field',
-            statements: [],
-            params: [
                 {
                     type: 'Dropdown',
-                    options: [['1', '1'], ['2', '2'], ['3', '3'], ['4', '4']],
-                    value: '1',
+                    options: [
+                        ['0', '0'],
+                        ['1', '1'],
+                        ['2', '2'],
+                        ['3', '3'],
+                        ['4', '4'],
+                        ['5', '5'],
+                        ['6', '6'],
+                        ['7', '7'],
+                        ['8', '8'],
+                        ['9', '9'],
+                        ['10', '10'],
+                        ['11', '11'],
+                        ['12', '12'],
+                        ['13', '13'],
+                        ['14', '14'],
+                        ['15', '15'],
+                    ],
+                    value: '0',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -212,7 +217,35 @@ Entry.rq_robot.getBlocks = function() {
             events: {},
             def: {
                 params: [null],
-                type: 'rq_get_sensor_value',
+                type: 'rq_move_dc_motor',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                VALUE: 1,
+            },
+            class: 'rq_motor',
+            //isNotFor: ['rq_robot'],
+            func: function(sprite, script) {
+                var port = script.getStringField('PORT', script);
+                var value = script.getValue('VALUE', script);
+                Entry.hw.sendQueue[port] = {
+                    id: Math.floor(Math.random() * 100000, 0),
+                    type: Entry.rq_robot.motorMovementTypes.Power,
+                    power: value,
+                };
+                return script.callReturn();
+            },
+        },
+
+        rq_sound_sensor: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            events: {},
+            def: {
+                type: 'rq_sound_sensor',
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -229,225 +262,55 @@ Entry.rq_robot.getBlocks = function() {
                 return result;
             },
         },
-        rq_motor_degrees: {
+
+        rq_infrared_ray_sensor: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['A', 'A'], ['B', 'B'], ['C', 'C'], ['D', 'D']],
-                    value: 'A',
+                    options: [['1', '1'], ['2', '2'], ],
+                    value: '1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Dropdown',
-                    options: [[Lang.Blocks.rq_cw, 'CW'], [Lang.Blocks.rq_ccw, 'CCW']],
-                    value: 'CW',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
                 },
             ],
             events: {},
             def: {
-                params: [
-                    null,
-                    null,
-                    {
-                        type: 'angle',
-                    },
-                ],
-                type: 'rq_motor_degrees',
+                params: [null],
+                type: 'rq_infrared_ray_sensor',
             },
             paramsKeyMap: {
                 PORT: 0,
-                DIRECTION: 1,
-                DEGREE: 2,
             },
-            class: 'rq_output',
+            class: 'rq_sensor',
             //isNotFor: ['rq_robot'],
             func: function(sprite, script) {
                 var port = script.getStringField('PORT', script);
-                var degree = script.getValue('DEGREE', script);
-                if (degree <= 0) {
-                    degree = 0;
-                } else if (degree >= 720) {
-                    degree = 720;
+                var portData = Entry.hw.getDigitalPortValue(script.getNumberField('PORT', script));
+                var result;
+                if ($.isPlainObject(portData)) {
+                    result = portData.siValue || 0;
                 }
-                var direction = script.getStringField('DIRECTION', script);
-                Entry.hw.sendQueue[port] = {
-                    id: Math.floor(Math.random() * 100000, 0),
-                    type: Entry.rq_robot.motorMovementTypes.Degrees,
-                    degree: degree,
-                    power: direction == 'CW' ? 50 : -50,
-                };
-                return script.callReturn();
+                return result;
             },
         },
-        rq_motor_power: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [['A', 'A'], ['B', 'B'], ['C', 'C'], ['D', 'D']],
-                    value: 'A',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    null,
-                    {
-                        type: 'number',
-                        params: ['50'],
-                    },
-                ],
-                type: 'rq_motor_power',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-                VALUE: 1,
-            },
-            class: 'rq_output',
-            //isNotFor: ['rq_robot'],
-            func: function(sprite, script) {
-                var port = script.getStringField('PORT', script);
-                var value = script.getValue('VALUE', script);
-                Entry.hw.sendQueue[port] = {
-                    id: Math.floor(Math.random() * 100000, 0),
-                    type: Entry.rq_robot.motorMovementTypes.Power,
-                    power: value,
-                };
-                return script.callReturn();
-            },
-        },
-        rq_motor_power_on_time: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [['A', 'A'], ['B', 'B'], ['C', 'C'], ['D', 'D']],
-                    value: 'A',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    null,
-                    {
-                        type: 'number',
-                        params: ['2'],
-                    },
-                    {
-                        type: 'number',
-                        params: ['50'],
-                    },
-                ],
-                type: 'rq_motor_power_on_time',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-                TIME: 1,
-                VALUE: 2,
-            },
-            class: 'rq_output',
-            //isNotFor: ['rq_robot'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                var port = script.getStringField('PORT', script);
-                if (!script.isStart) {
-                    var time = script.getValue('TIME', script);
-                    var value = script.getValue('VALUE', script);
-                    script.isStart = true;
-                    script.timeFlag = 1;
-                    Entry.hw.sendQueue[port] = {
-                        id: Math.floor(Math.random() * 100000, 0),
-                        type: Entry.rq_robot.motorMovementTypes.Power,
-                        power: value,
-                    };
-                    var timeValue = time * 1000;
-                    var timer = setTimeout(function() {
-                        script.timeFlag = 0;
-                        Entry.rq_robot.removeTimeout(timer);
-                    }, timeValue);
-                    Entry.rq_robot.timeouts.push(timer);
-                    return script;
-                } else if (script.timeFlag == 1) {
-                    return script;
-                } else {
-                    delete script.isStart;
-                    delete script.timeFlag;
-                    Entry.engine.isContinue = false;
-                    Entry.hw.sendQueue[port] = {
-                        id: Math.floor(Math.random() * 100000, 0),
-                        type: Entry.rq_robot.motorMovementTypes.Power,
-                        power: 0,
-                    };
-                    return script.callReturn();
-                }
-            },
-        },
+
+
         rq_touch_sensor: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
-            skeleton: 'basic_boolean_field',
+            skeleton: 'basic_string_field',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['1', '1'], ['2', '2'], ['3', '3'], ['4', '4']],
+                    options: [['1', '1'], ['2', '2'], ],
                     value: '1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -467,61 +330,15 @@ Entry.rq_robot.getBlocks = function() {
             func: function(sprite, script) {
                 var port = script.getStringField('PORT', script);
                 var portData = Entry.hw.getDigitalPortValue(script.getNumberField('PORT', script));
-                var result = false;
-                if (portData.type == Entry.rq_robot.deviceTypes.Touch) {
-                    if (Number(portData.siValue) >= 1) {
-                        result = true;
-                    }
+                var result;
+                if ($.isPlainObject(portData)) {
+                    result = portData.siValue || 0;
                 }
-
                 return result;
             },
         },
-        rq_button_pressed: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#fff',
-            skeleton: 'basic_boolean_field',
-            statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['위', 'UP'],
-                        ['아래', 'DOWN'],
-                        ['왼쪽', 'LEFT'],
-                        ['오른쪽', 'RIGHT'],
-                        ['가운데', 'ENTER'],
-                        ['뒤로', 'BACK'],
-                    ],
-                    value: 'UP',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-            ],
-            events: {},
-            def: {
-                params: [null],
-                type: 'rq_button_pressed',
-            },
-            paramsKeyMap: {
-                BUTTON: 0,
-            },
-            class: 'rq_sensor',
-            //isNotFor: ['rq_robot'],
-            func: function(sprite, script) {
-                const buttonValue = script.getStringField('BUTTON', script);
-                var buttonData = Entry.hw.getDigitalPortValue(buttonValue);
-                var result = false;
-                if (buttonData.pressed) {
-                    return true;
-                }
 
-                return result;
-            },
-        },
-        rq_status_led: {
+        rq_play_sound: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -531,32 +348,155 @@ Entry.rq_robot.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['주황', 'ORANGE'],
-                        ['끄기', 'OFF'],
-                        ['초록', 'GREEN'],
-                        ['빨강', 'RED'],
-                        ['초록 깜박임', 'GREEN_FLASH'],
-                        ['빨강 깜박임', 'RED_FLASH'],
-                        ['주황 깜박임', 'ORANGE_FLASH'],
-                        ['초록 진동', 'GREEN_PULSE'],
-                        ['빨강 진동', 'RED_PULSE'],
-                        ['주황 진동', 'ORANGE_PULSE'],
+                        ['Ten little Indian boys' , '1'],
+                        ['Are you sleeping' , '2'],
+                        ['Twinkle, Twinkle, Little Star', '3'],
+                        ['Head, shoulders, knees and toes', '4'],
+                        ['Fur Elise', '5'],
+                        ['Minuet(Bach)', '6'],
+                        ['Congratulation', '7'],
+                        ['Happy birthday', '8'],
+                        ['Arirang', '9'],
+                        ['(fast)Congratulation','10'],
+                        ['Ending Song', '11'],
+                        ['Ding Dong', '12'],
+                        ['Ddang', '13'],
+                        ['Do', '14'],
+                        ['Re', '15'],
+                        ['Mi', '16'],
+                        ['Fa', '17'],
+                        ['Sol', '18'],
+                        ['La', '19'],
+                        ['Si', '20'],
+                        ['Do(H)', '21'],
+                        ['Re(H)', '22'],
+                        ['Mi(H)', '23'],
+                        ['Fa(H)', '24'],                        
                     ],
-                    value: 'ORANGE',
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'rq_play_sound',
+            },
+            paramsKeyMap: {
+                COLOR: 0,
+            },
+            class: 'rq_sound',
+            //isNotFor: ['rq_robot'],
+            func: function(sprite, script) {
+                Entry.hw.sendQueue.STATUS_COLOR = script.getStringField('COLOR', script);
+            },
+        }, 
+
+        rq_play_sound_second: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['Ten little Indian boys' , '1'],
+                        ['Are you sleeping' , '2'],
+                        ['Twinkle, Twinkle, Little Star', '3'],
+                        ['Head, shoulders, knees and toes', '4'],
+                        ['Fur Elise', '5'],
+                        ['Minuet(Bach)', '6'],
+                        ['Congratulation', '7'],
+                        ['Happy birthday', '8'],
+                        ['Arirang', '9'],
+                        ['(fast)Congratulation','10'],
+                        ['Ending Song', '11'],
+                        ['Ding Dong', '12'],
+                        ['Ddang', '13'],
+                        ['Do', '14'],
+                        ['Re', '15'],
+                        ['Mi', '16'],
+                        ['Fa', '17'],
+                        ['Sol', '18'],
+                        ['La', '19'],
+                        ['Si', '20'],
+                        ['Do(H)', '21'],
+                        ['Re(H)', '22'],
+                        ['Mi(H)', '23'],
+                        ['Fa(H)', '24'],                        
+                    ],
+                    value: '1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
+                    type: 'Dropdown',
+                    options: [['1', '1'], ['2', '2'],],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
+
             ],
             events: {},
             def: {
                 params: [null],
-                type: 'rq_status_led',
+                type: 'rq_play_sound_second',
+            },
+            paramsKeyMap: {
+                COLOR: 0,
+            },
+            class: 'rq_sound',
+            //isNotFor: ['rq_robot'],
+            func: function(sprite, script) {
+                Entry.hw.sendQueue.STATUS_COLOR = script.getStringField('COLOR', script);
+            },
+        }, 
+
+        rq_on_led: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [['1', '1'], ['2', '2'],],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['파랑', 'BLUE'],
+                        ['빨강', 'RED'],
+                        ['파랑빨강', 'RED_BLUE'],
+                        ['끄기', 'OFF'],
+
+                    ],
+                    value: 'BLUE',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                
+
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'rq_on_led',
             },
             paramsKeyMap: {
                 COLOR: 0,
@@ -566,8 +506,114 @@ Entry.rq_robot.getBlocks = function() {
             func: function(sprite, script) {
                 Entry.hw.sendQueue.STATUS_COLOR = script.getStringField('COLOR', script);
             },
-        },
-        //endregion ev3 이브이3
+        }, 
+
+        rq_off_led: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [['1', '1'], ['2', '2'],],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'rq_off_led',
+            },
+            paramsKeyMap: {
+                COLOR: 0,
+            },
+            class: 'rq_output',
+            //isNotFor: ['rq_robot'],
+            func: function(sprite, script) {
+                Entry.hw.sendQueue.STATUS_COLOR = script.getStringField('COLOR', script);
+            },
+        }, 
+
+        rq_motion: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['button A', '1'],
+                        ['button B', '2'],
+                        ['button ↙', '3'],
+                        ['button ↑', '4'],
+                        ['button ↘', '5'],
+                        ['button ←', '6'],
+                        ['button □', '7'],
+                        ['button →', '8'],
+                        ['button L.hand','9'],
+                        ['button ↓','10'],
+                        ['button R.hand','11'],
+                        ['button 1','12'],
+                        ['button 2','13'],
+                        ['button 3','14'],
+                        ['button 4','15'],
+                        ['button 5','16'],
+                        ['button 6','17'],
+                        ['button 7','18'],
+                        ['button 8','19'],
+                        ['button 9','20'],
+                        ['button 0','21'],
+                        ['button *+A','22'],
+                        ['button *+B','23'],
+                        ['button *+↙','24'],
+                        ['button *+↑','25'],
+                        ['button *+↘','26'],
+                        ['button *+←','27'],
+                        ['button *+□','28'],
+                        ['button *+→','29'],
+                        ['button *+L.hand','30'],
+                        ['button *+↓','31'],
+                        ['button *+R.hand','32'],
+                        ['button *+1','33'],
+                        ['button *+2','34'],
+                        ['button *+3','35'],
+                        ['button *+4','36'],
+                        ['button *+5','37'],
+                        ['button *+6','38'],
+                        ['button *+7','39'],
+                        ['button *+8','40'],
+                        ['button *+9','41'],
+                        ['button *+0','42'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'rq_motion',
+            },
+            paramsKeyMap: {
+                COLOR: 0,
+            },
+            class: 'rq_motion',
+            //isNotFor: ['rq_robot'],
+            func: function(sprite, script) {
+                Entry.hw.sendQueue.STATUS_COLOR = script.getStringField('COLOR', script);
+            },
+        }, 
     };
 };
 
