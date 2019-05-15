@@ -15,6 +15,7 @@ Entry.rq_robot = {
         Degrees: 0,
         Power: 1,
     },
+    
     deviceTypes: {
         NxtTouch: 1,
         NxtLight: 2,
