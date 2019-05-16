@@ -16,6 +16,27 @@ Entry.rq_robot = {
         Power: 1,
     },
 
+    COMMAND_MAP : {
+        'rq_cmd_move_dc_motor' : 1,
+        'rq_cmd_set_dc_motor_position' : 2,
+        'rq_cmd_stop_dc_motor' : 3,
+        'rq_cmd_move_sam3_motor' : 4,
+        'rq_cmd_set_sam3_motor_position' : 5,
+        'rq_cmd_on_sam3_led' : 6,
+        'rq_cmd_off_sam3_led' : 7,
+        'rq_cmd_move_sam3_motor_manual' : 8,
+        'rq_cmd_get_sam3_motor_position' : 9,
+        'rq_cmd_sound_sensor' : 10,
+        'rq_cmd_infrared_ray_sensor' : 11,
+        'rq_cmd_touch_sensor' : 12,
+        'rq_cmd_play_sound' : 13,
+        'rq_cmd_play_sound_second' : 14,
+        'rq_cmd_stop_sound' : 15,
+        'rq_cmd_on_led' : 16,
+        'rq_cmd_off_led' : 17,
+        'rq_cmd_motion' : 18,
+    },
+
     deviceTypes: {
         NxtTouch: 1,
         NxtLight: 2,
@@ -212,6 +233,11 @@ Entry.rq_robot.getBlocks = function() {
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
             ],
             events: {},
             def: {
@@ -219,8 +245,9 @@ Entry.rq_robot.getBlocks = function() {
                 type: 'rq_move_dc_motor',
             },
             paramsKeyMap: {
-                PORT: 0,
-                VALUE: 1,
+                MOTOR: 0,
+                DIRECTION: 1,
+                SPEED : 2,
             },
             class: 'rq_motor',
             //isNotFor: ['rq_robot'],
@@ -274,6 +301,11 @@ Entry.rq_robot.getBlocks = function() {
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
             ],
             events: {},
             def: {
@@ -281,8 +313,8 @@ Entry.rq_robot.getBlocks = function() {
                 type: 'rq_set_dc_motor_position',
             },
             paramsKeyMap: {
-                PORT: 0,
-                VALUE: 1,
+                LEFT_WHEEL_POS: 0,
+                RIGHT_WHEEL_POS: 1,
             },
             class: 'rq_motor',
             //isNotFor: ['rq_robot'],
@@ -398,6 +430,11 @@ Entry.rq_robot.getBlocks = function() {
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
             ],
             events: {},
             def: {
@@ -405,8 +442,9 @@ Entry.rq_robot.getBlocks = function() {
                 type: 'rq_move_sam3_motor',
             },
             paramsKeyMap: {
-                PORT: 0,
-                VALUE: 1,
+                SAM3_MOTOR: 0,
+                DIRECTION: 1,
+                SPEED : 2,
             },
             class: 'rq_sam3_motor',
             //isNotFor: ['rq_robot'],
@@ -475,6 +513,11 @@ Entry.rq_robot.getBlocks = function() {
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
             ],
             events: {},
             def: {
@@ -482,8 +525,8 @@ Entry.rq_robot.getBlocks = function() {
                 type: 'rq_set_sam3_motor_position',
             },
             paramsKeyMap: {
-                PORT: 0,
-                VALUE: 1,
+                SAM3_MOTOR: 0,
+                POSITION: 1,
             },
             class: 'rq_sam3_motor',
             //isNotFor: ['rq_robot'],
@@ -545,6 +588,11 @@ Entry.rq_robot.getBlocks = function() {
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
             ],
             events: {},
             def: {
@@ -552,8 +600,7 @@ Entry.rq_robot.getBlocks = function() {
                 type: 'rq_on_sam3_led',
             },
             paramsKeyMap: {
-                PORT: 0,
-                VALUE: 1,
+                SAM3_MOTOR: 0,
             },
             class: 'rq_sam3_motor',
             //isNotFor: ['rq_robot'],
@@ -615,6 +662,11 @@ Entry.rq_robot.getBlocks = function() {
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
             ],
             events: {},
             def: {
@@ -622,8 +674,7 @@ Entry.rq_robot.getBlocks = function() {
                 type: 'rq_off_sam3_led',
             },
             paramsKeyMap: {
-                PORT: 0,
-                VALUE: 1,
+                SAM3_MOTOR: 0,
             },
             class: 'rq_sam3_motor',
             //isNotFor: ['rq_robot'],
@@ -685,6 +736,11 @@ Entry.rq_robot.getBlocks = function() {
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
             ],
             events: {},
             def: {
@@ -692,8 +748,7 @@ Entry.rq_robot.getBlocks = function() {
                 type: 'rq_move_sam3_motor_manual',
             },
             paramsKeyMap: {
-                PORT: 0,
-                VALUE: 1,
+                SAM3_MOTOR: 0,
             },
             class: 'rq_sam3_motor',
             //isNotFor: ['rq_robot'],
@@ -755,6 +810,11 @@ Entry.rq_robot.getBlocks = function() {
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
             ],
             events: {},
             def: {
@@ -762,8 +822,7 @@ Entry.rq_robot.getBlocks = function() {
                 type: 'rq_get_sam3_motor_position',
             },
             paramsKeyMap: {
-                PORT: 0,
-                VALUE: 1,
+                SAM3_MOTOR : 0,
             },
             class: 'rq_sam3_motor',
             //isNotFor: ['rq_robot'],
@@ -829,7 +888,7 @@ Entry.rq_robot.getBlocks = function() {
                 type: 'rq_infrared_ray_sensor',
             },
             paramsKeyMap: {
-                PORT: 0,
+                INF_SENSOR: 0,
             },
             class: 'rq_sensor',
             //isNotFor: ['rq_robot'],
@@ -866,7 +925,7 @@ Entry.rq_robot.getBlocks = function() {
                 type: 'rq_touch_sensor',
             },
             paramsKeyMap: {
-                PORT: 0,
+                TOUCH_SENSOR: 0,
             },
             class: 'rq_sensor',
             //isNotFor: ['rq_robot'],
@@ -928,7 +987,7 @@ Entry.rq_robot.getBlocks = function() {
                 type: 'rq_play_sound',
             },
             paramsKeyMap: {
-                COLOR: 0,
+                PLAY_LIST: 0,
             },
             class: 'rq_sound',
             //isNotFor: ['rq_robot'],
@@ -991,7 +1050,8 @@ Entry.rq_robot.getBlocks = function() {
                 type: 'rq_play_sound_second',
             },
             paramsKeyMap: {
-                COLOR: 0,
+                PLAY_LIST : 0,
+                SEC : 1,
             },
             class: 'rq_sound',
             //isNotFor: ['rq_robot'],
@@ -1036,7 +1096,8 @@ Entry.rq_robot.getBlocks = function() {
                 type: 'rq_on_led',
             },
             paramsKeyMap: {
-                COLOR: 0,
+                LED : 0,
+                COLOR: 1,
             },
             class: 'rq_output',
             //isNotFor: ['rq_robot'],
@@ -1067,7 +1128,7 @@ Entry.rq_robot.getBlocks = function() {
                 type: 'rq_off_led',
             },
             paramsKeyMap: {
-                COLOR: 0,
+                LED : 0,
             },
             class: 'rq_output',
             //isNotFor: ['rq_robot'],
@@ -1141,7 +1202,7 @@ Entry.rq_robot.getBlocks = function() {
                 type: 'rq_motion',
             },
             paramsKeyMap: {
-                COLOR: 0,
+                MOTION : 0,
             },
             class: 'rq_motion',
             //isNotFor: ['rq_robot'],
