@@ -2,14 +2,11 @@
 
 Entry.rq_robot = {
     PORT_MAP: {
-        A: 0,
-        B: 0,
-        C: 0,
-        D: 0,
-        '1': undefined,
-        '2': undefined,
-        '3': undefined,
-        '4': undefined,
+
+        READ: 1,
+        WRITE: 2,
+        READ_WRITE: 4,
+
     },
     motorMovementTypes: {
         Degrees: 0,
@@ -75,20 +72,14 @@ Entry.rq_robot = {
         this.timeouts = [];
     },
     setZero() {
-        var portMap = this.PORT_MAP;
-        Object.keys(portMap).forEach(function(port) {
-            var regex = /[A-D]/i;
-            if (regex.test(port)) {
-                Entry.hw.sendQueue[port] = {
-                    type: Entry.rq_robot.motorMovementTypes.Power,
-                    power: 0,
-                };
-            } else {
-                Entry.hw.sendQueue[port] = portMap[port];
-            }
-        });
-        Entry.hw.sendQueue.STATUS_COLOR = 'GREEN';
+
+        Entry.hw.sendQueue.readablePorts = [];
+        for (var port = 0; port < 20; port++) {
+            Entry.hw.sendQueue[port] = 0;
+            Entry.hw.sendQueue.readablePorts.push(port);
+        }
         Entry.hw.update();
+     
     },
     id: 'FFFF',
     name: 'rq_robot',
@@ -194,7 +185,7 @@ Entry.rq_robot.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['왼쪽', 'LEFT'], ['오른쪽', 'RIGHT']],
+                    options: [['LEFT', 'LEFT'], ['RIGHT', 'RIGHT']],
                     value: 'LEFT',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -202,7 +193,7 @@ Entry.rq_robot.getBlocks = function() {
                 },
                 {
                     type: 'Dropdown',
-                    options: [['시계', 'CW'], ['반시계', 'CCW']],
+                    options: [['CW', 'CW'], ['CCW', 'CCW']],
                     value: 'CW',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -252,12 +243,15 @@ Entry.rq_robot.getBlocks = function() {
             class: 'rq_motor',
             //isNotFor: ['rq_robot'],
             func(sprite, script) {
-                var port = script.getStringField('PORT', script);
-                var value = script.getValue('VALUE', script);
-                Entry.hw.sendQueue[port] = {
-                    id: Math.floor(Math.random() * 100000, 0),
-                    type: Entry.rq_robot.motorMovementTypes.Power,
-                    power: value,
+
+                var motor = script.getStringField('MOTOR', script);
+                var direction = script.getStringField('DIRECTION', script);
+                var speed = script.getStringField('SPEED', script);
+                Entry.hw.sendQueue[Entry.rq_robot.PORT_MAP.READ] = {
+                    cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_move_dc_motor,
+                    motor : motor,
+                    direction : direction,
+                    speed : speed,
                 };
                 return script.callReturn();
             },
@@ -278,7 +272,7 @@ Entry.rq_robot.getBlocks = function() {
                         ['0', '0'],
                         ['1', '1'],
                         ['2', '2'],
-                        ['2', '3'],
+                        ['3', '3'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -294,7 +288,7 @@ Entry.rq_robot.getBlocks = function() {
                         ['0', '0'],
                         ['1', '1'],
                         ['2', '2'],
-                        ['2', '3'],
+                        ['3', '3'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -319,13 +313,16 @@ Entry.rq_robot.getBlocks = function() {
             class: 'rq_motor',
             //isNotFor: ['rq_robot'],
             func(sprite, script) {
-                var port = script.getStringField('PORT', script);
-                var value = script.getValue('VALUE', script);
-                Entry.hw.sendQueue[port] = {
-                    id: Math.floor(Math.random() * 100000, 0),
-                    type: Entry.rq_robot.motorMovementTypes.Power,
-                    power: value,
+                
+                var left_wheel_pos = script.getStringField('LEFT_WHEEL_POS', script);
+                var right_wheel_pos = script.getStringField('RIGHT_WHEEL_POS', script);
+
+                Entry.hw.sendQueue[Entry.rq_robot.PORT_MAP.WRITE] = {
+                    cmd: Entry.rq_robot.COMMAND_MAP.rq_cmd_set_dc_motor_position,
+                    left_wheel : left_wheel_pos,
+                    right_wheel : right_wheel_pos,
                 };
+
                 return script.callReturn();
             },
         },
@@ -346,13 +343,11 @@ Entry.rq_robot.getBlocks = function() {
             class: 'rq_motor',
             //isNotFor: ['rq_robot'],
             func(sprite, script) {
-                var port = script.getStringField('PORT', script);
-                var portData = Entry.hw.getDigitalPortValue(script.getNumberField('PORT', script));
-                var result;
-                if ($.isPlainObject(portData)) {
-                    result = portData.siValue || 0;
-                }
-                return result;
+
+                Entry.hw.sendQueue[Entry.rq_robot.PORT_MAP.WRITE] = {
+                    cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_stop_dc_motor,
+                };
+                return script.callReturn();
             },
         },
 
@@ -404,7 +399,7 @@ Entry.rq_robot.getBlocks = function() {
                 },
                 {
                     type: 'Dropdown',
-                    options: [['시계', 'CW'], ['반시계', 'CCW']],
+                    options: [['CW', 'CW'], ['CCW', 'CCW']],
                     value: 'CW',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -449,12 +444,15 @@ Entry.rq_robot.getBlocks = function() {
             class: 'rq_sam3_motor',
             //isNotFor: ['rq_robot'],
             func(sprite, script) {
-                var port = script.getStringField('PORT', script);
-                var value = script.getValue('VALUE', script);
-                Entry.hw.sendQueue[port] = {
-                    id: Math.floor(Math.random() * 100000, 0),
-                    type: Entry.rq_robot.motorMovementTypes.Power,
-                    power: value,
+                var sam3_motor = script.getStringField('SAM3_MOTOR', script);
+                var direction = script.getStringField('DIRECTION', script);
+                var speed = script.getStringField('SPEED', script);
+
+                Entry.hw.sendQueue[Entry.rq_robot.PORT_MAP.WRITE] = {
+                    cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_move_sam3_motor,
+                    motor : sam3_motor,
+                    direction : direction,
+                    speed : speed,
                 };
                 return script.callReturn();
             },
@@ -531,12 +529,13 @@ Entry.rq_robot.getBlocks = function() {
             class: 'rq_sam3_motor',
             //isNotFor: ['rq_robot'],
             func(sprite, script) {
-                var port = script.getStringField('PORT', script);
-                var value = script.getValue('VALUE', script);
-                Entry.hw.sendQueue[port] = {
-                    id: Math.floor(Math.random() * 100000, 0),
-                    type: Entry.rq_robot.motorMovementTypes.Power,
-                    power: value,
+                var sam3_motor = script.getStringField('SAM3_MOTOR', script);
+                var position = script.getStringField('POSITION', script);
+                
+                Entry.hw.sendQueue[Entry.rq_robot.PORT_MAP.WRITE] = {
+                    cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_set_sam3_motor_position,
+                    motor : sam3_motor,
+                    position : position,
                 };
                 return script.callReturn();
             },
@@ -605,12 +604,11 @@ Entry.rq_robot.getBlocks = function() {
             class: 'rq_sam3_motor',
             //isNotFor: ['rq_robot'],
             func(sprite, script) {
-                var port = script.getStringField('PORT', script);
-                var value = script.getValue('VALUE', script);
-                Entry.hw.sendQueue[port] = {
-                    id: Math.floor(Math.random() * 100000, 0),
-                    type: Entry.rq_robot.motorMovementTypes.Power,
-                    power: value,
+                var sam3_motor = script.getStringField('SAM3_MOTOR', script);
+                
+                Entry.hw.sendQueue[Entry.rq_robot.PORT_MAP.WRITE] = {
+                    cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_on_sam3_led,
+                    motor : sam3_motor,
                 };
                 return script.callReturn();
             },
@@ -679,12 +677,11 @@ Entry.rq_robot.getBlocks = function() {
             class: 'rq_sam3_motor',
             //isNotFor: ['rq_robot'],
             func(sprite, script) {
-                var port = script.getStringField('PORT', script);
-                var value = script.getValue('VALUE', script);
-                Entry.hw.sendQueue[port] = {
-                    id: Math.floor(Math.random() * 100000, 0),
-                    type: Entry.rq_robot.motorMovementTypes.Power,
-                    power: value,
+                var sam3_motor = script.getStringField('SAM3_MOTOR', script);
+                
+                Entry.hw.sendQueue[Entry.rq_robot.PORT_MAP.WRITE] = {
+                    cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_off_sam3_led,
+                    motor : sam3_motor,
                 };
                 return script.callReturn();
             },
@@ -753,12 +750,11 @@ Entry.rq_robot.getBlocks = function() {
             class: 'rq_sam3_motor',
             //isNotFor: ['rq_robot'],
             func(sprite, script) {
-                var port = script.getStringField('PORT', script);
-                var value = script.getValue('VALUE', script);
-                Entry.hw.sendQueue[port] = {
-                    id: Math.floor(Math.random() * 100000, 0),
-                    type: Entry.rq_robot.motorMovementTypes.Power,
-                    power: value,
+                var sam3_motor = script.getStringField('SAM3_MOTOR', script);
+                
+                Entry.hw.sendQueue[Entry.rq_robot.PORT_MAP.WRITE] = {
+                    cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_move_sam3_motor_manual,
+                    motor : sam3_motor,
                 };
                 return script.callReturn();
             },
@@ -827,24 +823,21 @@ Entry.rq_robot.getBlocks = function() {
             class: 'rq_sam3_motor',
             //isNotFor: ['rq_robot'],
             func(sprite, script) {
-                var port = script.getStringField('PORT', script);
-                var value = script.getValue('VALUE', script);
-                Entry.hw.sendQueue[port] = {
-                    id: Math.floor(Math.random() * 100000, 0),
-                    type: Entry.rq_robot.motorMovementTypes.Power,
-                    power: value,
+                var sam3_motor = script.getStringField('SAM3_MOTOR', script);
+                
+                Entry.hw.sendQueue[Entry.rq_robot.PORT_MAP.READ_WRITE] = {
+                    cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_get_sam3_motor_position,
+                    motor : sam3_motor,
                 };
                 return script.callReturn();
             },
         },
      
-
-
         rq_sound_sensor: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
-            skeleton: 'basic_string_field',
+            skeleton: 'basic_boolean_field',
             statements: [],
             events: {},
             def: {
@@ -870,7 +863,7 @@ Entry.rq_robot.getBlocks = function() {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
-            skeleton: 'basic_string_field',
+            skeleton: 'basic_boolean_field',
             statements: [],
             params: [
                 {
@@ -907,7 +900,7 @@ Entry.rq_robot.getBlocks = function() {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
-            skeleton: 'basic_string_field',
+            skeleton: 'basic_boolean_field',
             statements: [],
             params: [
                 {
@@ -1079,10 +1072,10 @@ Entry.rq_robot.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['파랑', 'BLUE'],
-                        ['빨강', 'RED'],
-                        ['파랑빨강', 'RED_BLUE'],
-                        ['끄기', 'OFF'],
+                        ['BLUE', 'BLUE'],
+                        ['RED', 'RED'],
+                        ['REDBLUE', 'RED_BLUE'],
+                        ['OFF', 'OFF'],
                     ],
                     value: 'BLUE',
                     fontSize: 11,
