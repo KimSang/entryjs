@@ -2,15 +2,14 @@
 
 Entry.rq_robot = {
     PORT_MAP: {
-
-        READ: 1,
-        WRITE: 2,
-        READ_WRITE: 4,
-
-    },
-    motorMovementTypes: {
-        Degrees: 0,
-        Power: 1,
+        RQ_PORT_MOVE_DC : 'A',
+        RQ_PORT_SET_DC : 'B',
+        RQ_PORT_STOP : 'C',
+        RQ_PORT_MOVE_SAM3 : 'D',
+        RQ_PORT_MOVE_SAM3_POS : 'E',
+        RQ_PORT_SAM3_LED : 'F',
+        RQ_PORT_SAM3_MAN : 'G',
+        RQ_PORT_GET_SAM3_POS : 'H',
     },
 
     COMMAND_MAP : {
@@ -33,28 +32,6 @@ Entry.rq_robot = {
         'rq_cmd_off_led' : 17,
         'rq_cmd_motion' : 18,
     },
-
-    deviceTypes: {
-        NxtTouch: 1,
-        NxtLight: 2,
-        NxtSound: 3,
-        NxtColor: 4,
-        NxtUltrasonic: 5,
-        NxtTemperature: 6,
-        LMotor: 7,
-        MMotor: 8,
-        Touch: 16,
-        Color: 29,
-        Ultrasonic: 30,
-        Gyroscope: 32,
-        Infrared: 33,
-        Initializing: 0x7d,
-        Empty: 0x7e,
-        WrongPort: 0x7f,
-        Unknown: 0xff,
-    },
-    colorSensorValue: ['', '000000', '0000FF', '00FF00', 'FFFF00', 'FF0000', 'FFFFFF', 'A52A2A'],
-    timeouts: [],
 
     removeTimeout(id) {
         clearTimeout(id);
@@ -247,13 +224,14 @@ Entry.rq_robot.getBlocks = function() {
                 var motor = script.getStringField('MOTOR', script);
                 var direction = script.getStringField('DIRECTION', script);
                 var speed = script.getStringField('SPEED', script);
-                Entry.hw.sendQueue[Entry.rq_robot.PORT_MAP.READ] = {
+                Entry.hw.sendQueue[Entry.rq_robot.PORT_MAP.RQ_PORT_MOVE_DC] = {
                     cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_move_dc_motor,
                     motor : motor,
                     direction : direction,
                     speed : speed,
                 };
-                return script.callReturn();
+                Entry.hw.update();
+                //return script.callReturn();
             },
         },
 
@@ -317,13 +295,13 @@ Entry.rq_robot.getBlocks = function() {
                 var left_wheel_pos = script.getStringField('LEFT_WHEEL_POS', script);
                 var right_wheel_pos = script.getStringField('RIGHT_WHEEL_POS', script);
 
-                Entry.hw.sendQueue[Entry.rq_robot.PORT_MAP.WRITE] = {
+                Entry.hw.sendQueue[Entry.rq_robot.PORT_MAP.RQ_PORT_SET_DC] = {
                     cmd: Entry.rq_robot.COMMAND_MAP.rq_cmd_set_dc_motor_position,
                     left_wheel : left_wheel_pos,
                     right_wheel : right_wheel_pos,
                 };
-
-                return script.callReturn();
+                Entry.hw.update();
+                //return script.callReturn();
             },
         },
 
@@ -344,10 +322,11 @@ Entry.rq_robot.getBlocks = function() {
             //isNotFor: ['rq_robot'],
             func(sprite, script) {
 
-                Entry.hw.sendQueue[Entry.rq_robot.PORT_MAP.WRITE] = {
+                Entry.hw.sendQueue[Entry.rq_robot.PORT_MAP.RQ_PORT_STOP] = {
                     cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_stop_dc_motor,
                 };
-                return script.callReturn();
+                Entry.hw.update();
+                //return script.callReturn();
             },
         },
 
@@ -448,13 +427,14 @@ Entry.rq_robot.getBlocks = function() {
                 var direction = script.getStringField('DIRECTION', script);
                 var speed = script.getStringField('SPEED', script);
 
-                Entry.hw.sendQueue[Entry.rq_robot.PORT_MAP.WRITE] = {
+                Entry.hw.sendQueue[Entry.rq_robot.PORT_MAP.RQ_PORT_MOVE_SAM3] = {
                     cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_move_sam3_motor,
                     motor : sam3_motor,
                     direction : direction,
                     speed : speed,
                 };
-                return script.callReturn();
+                Entry.hw.update();
+                //return script.callReturn();
             },
         },
 
@@ -532,12 +512,13 @@ Entry.rq_robot.getBlocks = function() {
                 var sam3_motor = script.getStringField('SAM3_MOTOR', script);
                 var position = script.getStringField('POSITION', script);
                 
-                Entry.hw.sendQueue[Entry.rq_robot.PORT_MAP.WRITE] = {
+                Entry.hw.sendQueue[Entry.rq_robot.PORT_MAP.RQ_PORT_MOVE_SAM3_POS] = {
                     cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_set_sam3_motor_position,
                     motor : sam3_motor,
                     position : position,
                 };
-                return script.callReturn();
+                Entry.hw.update();
+                //return script.callReturn();
             },
         },
 
@@ -606,11 +587,12 @@ Entry.rq_robot.getBlocks = function() {
             func(sprite, script) {
                 var sam3_motor = script.getStringField('SAM3_MOTOR', script);
                 
-                Entry.hw.sendQueue[Entry.rq_robot.PORT_MAP.WRITE] = {
+                Entry.hw.sendQueue[Entry.rq_robot.PORT_MAP.RQ_PORT_SAM3_LED] = {
                     cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_on_sam3_led,
                     motor : sam3_motor,
                 };
-                return script.callReturn();
+                Entry.hw.update();
+                //return script.callReturn();
             },
         },
 
@@ -679,7 +661,7 @@ Entry.rq_robot.getBlocks = function() {
             func(sprite, script) {
                 var sam3_motor = script.getStringField('SAM3_MOTOR', script);
                 
-                Entry.hw.sendQueue[Entry.rq_robot.PORT_MAP.WRITE] = {
+                Entry.hw.sendQueue[Entry.rq_robot.PORT_MAP.RQ_PORT_SAM3_LED] = {
                     cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_off_sam3_led,
                     motor : sam3_motor,
                 };
@@ -825,7 +807,7 @@ Entry.rq_robot.getBlocks = function() {
             func(sprite, script) {
                 var sam3_motor = script.getStringField('SAM3_MOTOR', script);
                 
-                Entry.hw.sendQueue[Entry.rq_robot.PORT_MAP.READ_WRITE] = {
+                Entry.hw.sendQueue[Entry.rq_robot.PORT_MAP.RQ_PORT_GET_SAM3_POS] = {
                     cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_get_sam3_motor_position,
                     motor : sam3_motor,
                 };
