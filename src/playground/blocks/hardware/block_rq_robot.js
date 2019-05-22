@@ -11,6 +11,26 @@ Entry.rq_robot = {
         RQ_PORT_SAM3_MAN : 'G',
         RQ_PORT_GET_SAM3_POS : 'H',
     },
+    SENSOR_MAP : {
+        RQ_PORT_SOUND_SENSOR : 'I',
+        RQ_PORT_REMOTE_CONTROL : 'J',
+        RQ_PORT_INFRARED_SENSOR_1 : 'K1',
+        RQ_PORT_INFRARED_SENSOR_2 : 'K2',
+        RQ_PORT_TOUCH_SENSOR_1 : 'L1',
+        RQ_PORT_TOUCH_SENSOR_2 : 'L2',
+    },
+    SOUND_MAP : {
+        RQ_PORT_PLAY_SOUND : 'M',
+        RQ_PORT_PLAY_SOUND_SEC : 'N',
+        RQ_PORT_STOP_SOUND : 'O',
+    },
+    LED_MAP : {
+        RQ_PORT_LED_COLOR : 'P',
+        RQ_PORT_OFF_LED : 'Q',
+    },
+    MOTION_MAP : {
+        RQ_PORT_MOTION : 'R',
+    },
 
     COMMAND_MAP : {
         'rq_cmd_move_dc_motor' : 1,
@@ -23,14 +43,15 @@ Entry.rq_robot = {
         'rq_cmd_move_sam3_motor_manual' : 8,
         'rq_cmd_get_sam3_motor_position' : 9,
         'rq_cmd_sound_sensor' : 10,
-        'rq_cmd_infrared_ray_sensor' : 11,
-        'rq_cmd_touch_sensor' : 12,
-        'rq_cmd_play_sound' : 13,
-        'rq_cmd_play_sound_second' : 14,
-        'rq_cmd_stop_sound' : 15,
-        'rq_cmd_on_led' : 16,
-        'rq_cmd_off_led' : 17,
-        'rq_cmd_motion' : 18,
+        'rq_cmd_remote_control' : 11,
+        'rq_cmd_infrared_ray_sensor' : 12,
+        'rq_cmd_touch_sensor' : 13,
+        'rq_cmd_play_sound' : 14,
+        'rq_cmd_play_sound_second' : 15,
+        'rq_cmd_stop_sound' : 16,
+        'rq_cmd_on_led' : 17,
+        'rq_cmd_off_led' : 18,
+        'rq_cmd_motion' : 19,
     },
 
     removeTimeout(id) {
@@ -84,6 +105,7 @@ Entry.rq_robot.setLanguage = function() {
                 rq_get_sam3_motor_position: '서보모터 %1의 위치값',
 
                 rq_sound_sensor: '소리센서',
+                rq_remote_value: '리모콘값',
                 rq_infrared_ray_sensor: '%1번 적외선 센서',
                 rq_touch_sensor: '%1번 터치 센서',
 
@@ -111,9 +133,10 @@ Entry.rq_robot.setLanguage = function() {
                 rq_get_sam3_motor_position: '서보모터 %1의 위치값',
 
                 rq_sound_sensor: '소리센서',
+                rq_remote_value: '리모콘값',
                 rq_infrared_ray_sensor: '%1번 적외선 센서',
                 rq_touch_sensor: '%1번 터치 센서',
-
+                
                 rq_play_sound: '%1 소리 출력',
                 rq_play_sound_second: '%1(으)로 %2초 연주하기',
                 rq_stop_sound: '소리 끄기',
@@ -140,6 +163,7 @@ Entry.rq_robot.blockMenuBlocks = [
     'rq_get_sam3_motor_position',
 
     'rq_sound_sensor',
+    'rq_remote_value',
     'rq_infrared_ray_sensor',
     'rq_touch_sensor',
 
@@ -166,7 +190,6 @@ Entry.rq_robot.getBlocks = function() {
                     value: 'LEFT',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -174,42 +197,21 @@ Entry.rq_robot.getBlocks = function() {
                     value: 'CW',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
-                    type: 'Dropdown',
-                    options: [
-                        ['0', '0'],
-                        ['1', '1'],
-                        ['2', '2'],
-                        ['3', '3'],
-                        ['4', '4'],
-                        ['5', '5'],
-                        ['6', '6'],
-                        ['7', '7'],
-                        ['8', '8'],
-                        ['9', '9'],
-                        ['10', '10'],
-                        ['11', '11'],
-                        ['12', '12'],
-                        ['13', '13'],
-                        ['14', '14'],
-                        ['15', '15'],
-                    ],
-                    value: '0',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
                 },
             ],
             events: {},
             def: {
-                params: [null],
+                params: [
+                    null, 
+                    null, {
+                    type:"number",
+                    params : ["0"]
+                }],
                 type: 'rq_move_dc_motor',
             },
             paramsKeyMap: {
@@ -223,15 +225,23 @@ Entry.rq_robot.getBlocks = function() {
 
                 var motor = script.getStringField('MOTOR', script);
                 var direction = script.getStringField('DIRECTION', script);
-                var speed = script.getStringField('SPEED', script);
+                var speed = script.getValue('SPEED', script);
+                if( speed <= -3)
+                {
+                    speed = -3;
+                }
+                else if( speed >= 3)
+                {
+                    speed = 3;
+                }
                 Entry.hw.sendQueue[Entry.rq_robot.PORT_MAP.RQ_PORT_MOVE_DC] = {
                     cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_move_dc_motor,
                     motor : motor,
                     direction : direction,
                     speed : speed,
                 };
-                Entry.hw.update();
-                //return script.callReturn();
+                
+                return script.callReturn();
             },
         },
 
@@ -242,46 +252,28 @@ Entry.rq_robot.getBlocks = function() {
             statements: [],
             params: [
                 {
-                    type: 'Dropdown',
-                    options: [
-                        ['-3', '-3'],
-                        ['-2', '-2'],
-                        ['-1', '-1'],
-                        ['0', '0'],
-                        ['1', '1'],
-                        ['2', '2'],
-                        ['3', '3'],
-                    ],
-                    value: '0',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
                 },
                 {
-                    type: 'Dropdown',
-                    options: [
-                        ['-3', '-3'],
-                        ['-2', '-2'],
-                        ['-1', '-1'],
-                        ['0', '0'],
-                        ['1', '1'],
-                        ['2', '2'],
-                        ['3', '3'],
-                    ],
-                    value: '0',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
                 },
             ],
             events: {},
             def: {
-                params: [null],
+                params: [
+                    {
+                        type:"number",
+                        params : ["0"]
+                    },
+                    {
+                        type:"number",
+                        params : ["0"]
+                    }
+                ],
                 type: 'rq_set_dc_motor_position',
             },
             paramsKeyMap: {
@@ -292,16 +284,34 @@ Entry.rq_robot.getBlocks = function() {
             //isNotFor: ['rq_robot'],
             func(sprite, script) {
                 
-                var left_wheel_pos = script.getStringField('LEFT_WHEEL_POS', script);
-                var right_wheel_pos = script.getStringField('RIGHT_WHEEL_POS', script);
+                var left_wheel_pos = script.getValue('LEFT_WHEEL_POS', script);
+                var right_wheel_pos = script.getValue('RIGHT_WHEEL_POS', script);
+
+                if( left_wheel_pos <= -3)
+                {
+                    left_wheel_pos = -3;
+                }
+                else if( left_wheel_pos >= 3)
+                {
+                    left_wheel_pos = 3;
+                }
+
+                if( right_wheel_pos <= -3)
+                {
+                    right_wheel_pos = -3;
+                }
+                else if( right_wheel_pos >= 3)
+                {
+                    right_wheel_pos = 3;
+                }
 
                 Entry.hw.sendQueue[Entry.rq_robot.PORT_MAP.RQ_PORT_SET_DC] = {
                     cmd: Entry.rq_robot.COMMAND_MAP.rq_cmd_set_dc_motor_position,
                     left_wheel : left_wheel_pos,
                     right_wheel : right_wheel_pos,
                 };
-                Entry.hw.update();
-                //return script.callReturn();
+
+                return script.callReturn();
             },
         },
 
@@ -325,8 +335,8 @@ Entry.rq_robot.getBlocks = function() {
                 Entry.hw.sendQueue[Entry.rq_robot.PORT_MAP.RQ_PORT_STOP] = {
                     cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_stop_dc_motor,
                 };
-                Entry.hw.update();
-                //return script.callReturn();
+
+                return script.callReturn();
             },
         },
 
@@ -337,44 +347,9 @@ Entry.rq_robot.getBlocks = function() {
             statements: [],
             params: [
                 {
-                    type: 'Dropdown',
-                    options: [
-                        ['0', '0'],
-                        ['1', '1'],
-                        ['2', '2'],
-                        ['3', '3'],
-                        ['4', '4'],
-                        ['5', '5'],
-                        ['6', '6'],
-                        ['7', '7'],
-                        ['8', '8'],
-                        ['9', '9'],
-                        ['10', '10'],
-                        ['11', '11'],
-                        ['12', '12'],
-                        ['13', '13'],
-                        ['14', '14'],
-                        ['15', '15'],
-                        ['16', '16'],
-                        ['17', '17'],
-                        ['18', '18'],
-                        ['19', '19'],
-                        ['20', '20'],
-                        ['21', '21'],
-                        ['22', '22'],
-                        ['23', '23'],
-                        ['24', '24'],
-                        ['25', '25'],
-                        ['26', '26'],
-                        ['27', '27'],
-                        ['28', '28'],
-                        ['29', '29'],
-                        ['30', '30'],
-                    ],
-                    value: '0',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
                 },
                 {
                     type: 'Dropdown',
@@ -382,37 +357,26 @@ Entry.rq_robot.getBlocks = function() {
                     value: 'CW',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
-                    type: 'Dropdown',
-                    options: [
-                        ['-5', '-5'],
-                        ['-4', '-4'],
-                        ['-3', '-3'],
-                        ['-2', '-2'],
-                        ['-1', '-1'],
-                        ['0', '0'],
-                        ['1', '1'],
-                        ['2', '2'],
-                        ['3', '3'],
-                        ['4', '4'],
-                        ['5', '5'],
-                    ],
-                    value: '0',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
                 },
             ],
             events: {},
             def: {
-                params: [null],
+                params: [
+                    {
+                        type:"number",
+                        params : ["0"]
+                    },
+                    null,
+                    {
+                        type:"number",
+                        params : ["0"]
+                    }
+                    ],
                 type: 'rq_move_sam3_motor',
             },
             paramsKeyMap: {
@@ -423,9 +387,27 @@ Entry.rq_robot.getBlocks = function() {
             class: 'rq_sam3_motor',
             //isNotFor: ['rq_robot'],
             func(sprite, script) {
-                var sam3_motor = script.getStringField('SAM3_MOTOR', script);
+                var sam3_motor = script.getValue('SAM3_MOTOR', script);
                 var direction = script.getStringField('DIRECTION', script);
-                var speed = script.getStringField('SPEED', script);
+                var speed = script.getValue('SPEED', script);
+
+                if( speed <= -5)
+                {
+                    speed = -5;
+                }
+                else if( speed >= 5)
+                {
+                    speed = 5;
+                }
+
+                if( sam3_motor <= 0)
+                {
+                    sam3_motor = 0;
+                }
+                else if( sam3_motor >= 28)
+                {
+                    sam3_motor = 28;
+                }
 
                 Entry.hw.sendQueue[Entry.rq_robot.PORT_MAP.RQ_PORT_MOVE_SAM3] = {
                     cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_move_sam3_motor,
@@ -433,8 +415,8 @@ Entry.rq_robot.getBlocks = function() {
                     direction : direction,
                     speed : speed,
                 };
-                Entry.hw.update();
-                //return script.callReturn();
+
+                return script.callReturn();
             },
         },
 
@@ -445,61 +427,28 @@ Entry.rq_robot.getBlocks = function() {
             statements: [],
             params: [
                 {
-                    type: 'Dropdown',
-                    options: [
-                        ['0', '0'],
-                        ['1', '1'],
-                        ['2', '2'],
-                        ['3', '3'],
-                        ['4', '4'],
-                        ['5', '5'],
-                        ['6', '6'],
-                        ['7', '7'],
-                        ['8', '8'],
-                        ['9', '9'],
-                        ['10', '10'],
-                        ['11', '11'],
-                        ['12', '12'],
-                        ['13', '13'],
-                        ['14', '14'],
-                        ['15', '15'],
-                        ['16', '16'],
-                        ['17', '17'],
-                        ['18', '18'],
-                        ['19', '19'],
-                        ['20', '20'],
-                        ['21', '21'],
-                        ['22', '22'],
-                        ['23', '23'],
-                        ['24', '24'],
-                        ['25', '25'],
-                        ['26', '26'],
-                        ['27', '27'],
-                        ['28', '28'],
-                        ['29', '29'],
-                        ['30', '30'],
-                    ],
-                    value: '0',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
                 },
                 {
-                    type: 'TextInput',
-                    value: 0,
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
                 },
             ],
             events: {},
             def: {
-                params: [null],
+                params: [                   
+                {
+                    type:"number",
+                    params : ["0"]
+                },
+                {
+                    type:"number",
+                    params : ["0"]
+                }
+            ],
                 type: 'rq_set_sam3_motor_position',
             },
             paramsKeyMap: {
@@ -509,16 +458,33 @@ Entry.rq_robot.getBlocks = function() {
             class: 'rq_sam3_motor',
             //isNotFor: ['rq_robot'],
             func(sprite, script) {
-                var sam3_motor = script.getStringField('SAM3_MOTOR', script);
-                var position = script.getStringField('POSITION', script);
+                var sam3_motor = script.getValue('SAM3_MOTOR', script);
+                var position = script.getValue('POSITION', script);
+
+                if( position <= 0)
+                {
+                    position = 0;
+                }
+                else if( position >= 254)
+                {
+                    position = 254;
+                }
+                if( sam3_motor <= 0)
+                {
+                    sam3_motor = 0;
+                }
+                else if( sam3_motor >= 28)
+                {
+                    sam3_motor = 28;
+                }
                 
                 Entry.hw.sendQueue[Entry.rq_robot.PORT_MAP.RQ_PORT_MOVE_SAM3_POS] = {
                     cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_set_sam3_motor_position,
                     motor : sam3_motor,
                     position : position,
                 };
-                Entry.hw.update();
-                //return script.callReturn();
+
+                return script.callReturn();
             },
         },
 
@@ -529,54 +495,17 @@ Entry.rq_robot.getBlocks = function() {
             statements: [],
             params: [
                 {
-                    type: 'Dropdown',
-                    options: [
-                        ['0', '0'],
-                        ['1', '1'],
-                        ['2', '2'],
-                        ['3', '3'],
-                        ['4', '4'],
-                        ['5', '5'],
-                        ['6', '6'],
-                        ['7', '7'],
-                        ['8', '8'],
-                        ['9', '9'],
-                        ['10', '10'],
-                        ['11', '11'],
-                        ['12', '12'],
-                        ['13', '13'],
-                        ['14', '14'],
-                        ['15', '15'],
-                        ['16', '16'],
-                        ['17', '17'],
-                        ['18', '18'],
-                        ['19', '19'],
-                        ['20', '20'],
-                        ['21', '21'],
-                        ['22', '22'],
-                        ['23', '23'],
-                        ['24', '24'],
-                        ['25', '25'],
-                        ['26', '26'],
-                        ['27', '27'],
-                        ['28', '28'],
-                        ['29', '29'],
-                        ['30', '30'],
-                    ],
-                    value: '0',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
                 },
             ],
             events: {},
             def: {
-                params: [null],
+                params: [{
+                    type:"number",
+                    params :["0"]
+                }],
                 type: 'rq_on_sam3_led',
             },
             paramsKeyMap: {
@@ -585,14 +514,23 @@ Entry.rq_robot.getBlocks = function() {
             class: 'rq_sam3_motor',
             //isNotFor: ['rq_robot'],
             func(sprite, script) {
-                var sam3_motor = script.getStringField('SAM3_MOTOR', script);
+                var sam3_motor = script.getValue('SAM3_MOTOR', script);
                 
+                if( sam3_motor <= 0)
+                {
+                    sam3_motor = 0;
+                }
+                else if( sam3_motor >= 28)
+                {
+                    sam3_motor = 28;
+                }
+
                 Entry.hw.sendQueue[Entry.rq_robot.PORT_MAP.RQ_PORT_SAM3_LED] = {
                     cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_on_sam3_led,
                     motor : sam3_motor,
                 };
-                Entry.hw.update();
-                //return script.callReturn();
+
+                return script.callReturn();
             },
         },
 
@@ -603,54 +541,19 @@ Entry.rq_robot.getBlocks = function() {
             statements: [],
             params: [
                 {
-                    type: 'Dropdown',
-                    options: [
-                        ['0', '0'],
-                        ['1', '1'],
-                        ['2', '2'],
-                        ['3', '3'],
-                        ['4', '4'],
-                        ['5', '5'],
-                        ['6', '6'],
-                        ['7', '7'],
-                        ['8', '8'],
-                        ['9', '9'],
-                        ['10', '10'],
-                        ['11', '11'],
-                        ['12', '12'],
-                        ['13', '13'],
-                        ['14', '14'],
-                        ['15', '15'],
-                        ['16', '16'],
-                        ['17', '17'],
-                        ['18', '18'],
-                        ['19', '19'],
-                        ['20', '20'],
-                        ['21', '21'],
-                        ['22', '22'],
-                        ['23', '23'],
-                        ['24', '24'],
-                        ['25', '25'],
-                        ['26', '26'],
-                        ['27', '27'],
-                        ['28', '28'],
-                        ['29', '29'],
-                        ['30', '30'],
-                    ],
-                    value: '0',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
                 },
             ],
             events: {},
             def: {
-                params: [null],
+                params: [
+                    {
+                        type : "number",
+                        params : ["0"],
+                    }
+                ],
                 type: 'rq_off_sam3_led',
             },
             paramsKeyMap: {
@@ -659,12 +562,22 @@ Entry.rq_robot.getBlocks = function() {
             class: 'rq_sam3_motor',
             //isNotFor: ['rq_robot'],
             func(sprite, script) {
-                var sam3_motor = script.getStringField('SAM3_MOTOR', script);
+                var sam3_motor = script.getValue('SAM3_MOTOR', script);
                 
+                if( sam3_motor <= 0)
+                {
+                    sam3_motor = 0;
+                }
+                else if( sam3_motor >= 28)
+                {
+                    sam3_motor = 28;
+                }
+
                 Entry.hw.sendQueue[Entry.rq_robot.PORT_MAP.RQ_PORT_SAM3_LED] = {
                     cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_off_sam3_led,
                     motor : sam3_motor,
                 };
+
                 return script.callReturn();
             },
         },
@@ -676,54 +589,18 @@ Entry.rq_robot.getBlocks = function() {
             statements: [],
             params: [
                 {
-                    type: 'Dropdown',
-                    options: [
-                        ['0', '0'],
-                        ['1', '1'],
-                        ['2', '2'],
-                        ['3', '3'],
-                        ['4', '4'],
-                        ['5', '5'],
-                        ['6', '6'],
-                        ['7', '7'],
-                        ['8', '8'],
-                        ['9', '9'],
-                        ['10', '10'],
-                        ['11', '11'],
-                        ['12', '12'],
-                        ['13', '13'],
-                        ['14', '14'],
-                        ['15', '15'],
-                        ['16', '16'],
-                        ['17', '17'],
-                        ['18', '18'],
-                        ['19', '19'],
-                        ['20', '20'],
-                        ['21', '21'],
-                        ['22', '22'],
-                        ['23', '23'],
-                        ['24', '24'],
-                        ['25', '25'],
-                        ['26', '26'],
-                        ['27', '27'],
-                        ['28', '28'],
-                        ['29', '29'],
-                        ['30', '30'],
-                    ],
-                    value: '0',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
                 },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+
             ],
             events: {},
             def: {
-                params: [null],
+                params: [{
+                    type : "number",
+                    params : ["0"],
+                }],
                 type: 'rq_move_sam3_motor_manual',
             },
             paramsKeyMap: {
@@ -732,12 +609,22 @@ Entry.rq_robot.getBlocks = function() {
             class: 'rq_sam3_motor',
             //isNotFor: ['rq_robot'],
             func(sprite, script) {
-                var sam3_motor = script.getStringField('SAM3_MOTOR', script);
+                var sam3_motor = script.getValue('SAM3_MOTOR', script);
                 
-                Entry.hw.sendQueue[Entry.rq_robot.PORT_MAP.WRITE] = {
+                if( sam3_motor <= 0)
+                {
+                    sam3_motor = 0;
+                }
+                else if( sam3_motor >= 28)
+                {
+                    sam3_motor = 28;
+                }
+
+                Entry.hw.sendQueue[Entry.rq_robot.PORT_MAP.RQ_PORT_SAM3_MAN] = {
                     cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_move_sam3_motor_manual,
                     motor : sam3_motor,
                 };
+
                 return script.callReturn();
             },
         },
@@ -749,54 +636,17 @@ Entry.rq_robot.getBlocks = function() {
             statements: [],
             params: [
                 {
-                    type: 'Dropdown',
-                    options: [
-                        ['0', '0'],
-                        ['1', '1'],
-                        ['2', '2'],
-                        ['3', '3'],
-                        ['4', '4'],
-                        ['5', '5'],
-                        ['6', '6'],
-                        ['7', '7'],
-                        ['8', '8'],
-                        ['9', '9'],
-                        ['10', '10'],
-                        ['11', '11'],
-                        ['12', '12'],
-                        ['13', '13'],
-                        ['14', '14'],
-                        ['15', '15'],
-                        ['16', '16'],
-                        ['17', '17'],
-                        ['18', '18'],
-                        ['19', '19'],
-                        ['20', '20'],
-                        ['21', '21'],
-                        ['22', '22'],
-                        ['23', '23'],
-                        ['24', '24'],
-                        ['25', '25'],
-                        ['26', '26'],
-                        ['27', '27'],
-                        ['28', '28'],
-                        ['29', '29'],
-                        ['30', '30'],
-                    ],
-                    value: '0',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
                 },
             ],
             events: {},
             def: {
-                params: [null],
+                params: [{
+                    type : "number",
+                    params : ["0"],
+                }],
                 type: 'rq_get_sam3_motor_position',
             },
             paramsKeyMap: {
@@ -805,12 +655,22 @@ Entry.rq_robot.getBlocks = function() {
             class: 'rq_sam3_motor',
             //isNotFor: ['rq_robot'],
             func(sprite, script) {
-                var sam3_motor = script.getStringField('SAM3_MOTOR', script);
+                var sam3_motor = script.getValue('SAM3_MOTOR', script);
                 
+                if( sam3_motor <= 0)
+                {
+                    sam3_motor = 0;
+                }
+                else if( sam3_motor >= 28)
+                {
+                    sam3_motor = 28;
+                }
+
                 Entry.hw.sendQueue[Entry.rq_robot.PORT_MAP.RQ_PORT_GET_SAM3_POS] = {
                     cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_get_sam3_motor_position,
                     motor : sam3_motor,
                 };
+
                 return script.callReturn();
             },
         },
@@ -819,7 +679,7 @@ Entry.rq_robot.getBlocks = function() {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
-            skeleton: 'basic_boolean_field',
+            skeleton: 'basic_string_field',
             statements: [],
             events: {},
             def: {
@@ -831,12 +691,28 @@ Entry.rq_robot.getBlocks = function() {
             class: 'rq_sensor',
             //isNotFor: ['rq_robot'],
             func(sprite, script) {
-                var port = script.getStringField('PORT', script);
-                var portData = Entry.hw.getDigitalPortValue(script.getNumberField('PORT', script));
-                var result;
-                if ($.isPlainObject(portData)) {
-                    result = portData.siValue || 0;
-                }
+                var result = Entry.hw.portData[Entry.rq_robot.SENSOR_MAP.RQ_PORT_SOUND_SENSOR];
+                return result;
+            },
+        },
+
+        rq_remote_value: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            events: {},
+            def: {
+                type: 'rq_remote_value',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            class: 'rq_sensor',
+            //isNotFor: ['rq_robot'],
+            func(sprite, script) {
+                var result = Entry.hw.portData[Entry.rq_robot.SENSOR_MAP.RQ_PORT_REMOTE_CONTROL];
                 return result;
             },
         },
@@ -854,7 +730,6 @@ Entry.rq_robot.getBlocks = function() {
                     value: '1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -868,13 +743,19 @@ Entry.rq_robot.getBlocks = function() {
             class: 'rq_sensor',
             //isNotFor: ['rq_robot'],
             func(sprite, script) {
-                var port = script.getStringField('PORT', script);
-                var portData = Entry.hw.getDigitalPortValue(script.getNumberField('PORT', script));
-                var result;
-                if ($.isPlainObject(portData)) {
-                    result = portData.siValue || 0;
+                
+                var port = script.getStringField('INF_SENSOR', script);
+
+                if( port == '1')
+                {
+                    var result = Entry.hw.portData[Entry.rq_robot.SENSOR_MAP.RQ_PORT_INFRARED_SENSOR_1];
+                    return result;
                 }
-                return result;
+                else if(port == '2')
+                {
+                    var result = Entry.hw.portData[Entry.rq_robot.SENSOR_MAP.RQ_PORT_INFRARED_SENSOR_2];
+                    return result;
+                }
             },
         },
 
@@ -891,7 +772,6 @@ Entry.rq_robot.getBlocks = function() {
                     value: '1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -905,13 +785,19 @@ Entry.rq_robot.getBlocks = function() {
             class: 'rq_sensor',
             //isNotFor: ['rq_robot'],
             func(sprite, script) {
-                var port = script.getStringField('PORT', script);
-                var portData = Entry.hw.getDigitalPortValue(script.getNumberField('PORT', script));
-                var result;
-                if ($.isPlainObject(portData)) {
-                    result = portData.siValue || 0;
+                
+                var port = script.getStringField('TOUCH_SENSOR', script);
+
+                if( port == '1')
+                {
+                    var result = Entry.hw.portData[Entry.rq_robot.SENSOR_MAP.RQ_PORT_TOUCH_SENSOR_1];
+                    return result;
                 }
-                return result;
+                else if(port == '2')
+                {
+                    var result = Entry.hw.portData[Entry.rq_robot.SENSOR_MAP.RQ_PORT_TOUCH_SENSOR_2];
+                    return result;
+                }
             },
         },
 
@@ -953,7 +839,6 @@ Entry.rq_robot.getBlocks = function() {
                     value: '1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -967,7 +852,14 @@ Entry.rq_robot.getBlocks = function() {
             class: 'rq_sound',
             //isNotFor: ['rq_robot'],
             func(sprite, script) {
-                Entry.hw.sendQueue.STATUS_COLOR = script.getStringField('COLOR', script);
+                var play_list = script.getStringField('PLAY_LIST', script);
+
+                Entry.hw.sendQueue[Entry.rq_robot.SOUND_MAP.RQ_PORT_PLAY_SOUND] = {
+                    cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_play_sound,
+                    play_list : play_list,
+                };
+
+                return script.callReturn();
             },
         },
 
@@ -981,47 +873,35 @@ Entry.rq_robot.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['Ten little Indian boys', '1'],
-                        ['Are you sleeping', '2'],
-                        ['Twinkle, Twinkle, Little Star', '3'],
-                        ['Head, shoulders, knees and toes', '4'],
-                        ['Fur Elise', '5'],
-                        ['Minuet(Bach)', '6'],
-                        ['Congratulation', '7'],
-                        ['Happy birthday', '8'],
-                        ['Arirang', '9'],
-                        ['(fast)Congratulation', '10'],
-                        ['Ending Song', '11'],
-                        ['Ding Dong', '12'],
-                        ['Ddang', '13'],
-                        ['Do', '14'],
-                        ['Re', '15'],
-                        ['Mi', '16'],
-                        ['Fa', '17'],
-                        ['Sol', '18'],
-                        ['La', '19'],
-                        ['Si', '20'],
-                        ['Do(H)', '21'],
-                        ['Re(H)', '22'],
-                        ['Mi(H)', '23'],
-                        ['Fa(H)', '24'],
+                        ['Do', '1'],
+                        ['Re', '2'],
+                        ['Mi', '3'],
+                        ['Fa', '4'],
+                        ['Sol', '5'],
+                        ['La', '6'],
+                        ['Si', '7'],
+                        ['Do(H)', '8'],
+                        ['Re(H)', '9'],
+                        ['Mi(H)', '10'],
+                        ['Fa(H)', '11'],
                     ],
                     value: '1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
-                    type: 'TextInput',
-                    value: 0,
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
                 },
             ],
             events: {},
             def: {
-                params: [null],
+                params: [null,
+                {
+                    type : "number",
+                    params : ["0"],
+                }],
                 type: 'rq_play_sound_second',
             },
             paramsKeyMap: {
@@ -1031,7 +911,41 @@ Entry.rq_robot.getBlocks = function() {
             class: 'rq_sound',
             //isNotFor: ['rq_robot'],
             func(sprite, script) {
-                Entry.hw.sendQueue.STATUS_COLOR = script.getStringField('COLOR', script);
+                var play_list = script.getStringField('PLAY_LIST', script);
+                var sec = script.getValue('SEC', script);
+
+                Entry.hw.sendQueue[Entry.rq_robot.SOUND_MAP.rq_cmd_play_sound_second] = {
+                    cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_play_sound,
+                    play_list : play_list,
+                    sec : sec,
+                };
+
+                return script.callReturn();
+            },
+        },
+
+        rq_stop_sound: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            events: {},
+            def: {
+                type: 'rq_stop_sound',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            class: 'rq_sound',
+            //isNotFor: ['rq_robot'],
+            func(sprite, script) {
+
+                Entry.hw.sendQueue[Entry.rq_robot.SOUND_MAP.RQ_PORT_STOP_SOUND] = {
+                    cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_stop_sound,
+                };
+
+                return script.callReturn();
             },
         },
 
@@ -1048,7 +962,6 @@ Entry.rq_robot.getBlocks = function() {
                     value: '1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
 
                 {
@@ -1062,7 +975,6 @@ Entry.rq_robot.getBlocks = function() {
                     value: 'BLUE',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -1077,7 +989,16 @@ Entry.rq_robot.getBlocks = function() {
             class: 'rq_output',
             //isNotFor: ['rq_robot'],
             func(sprite, script) {
-                Entry.hw.sendQueue.STATUS_COLOR = script.getStringField('COLOR', script);
+                var led = script.getStringField('LED', script);
+                var color = script.getStringField('COLOR', script);
+
+                Entry.hw.sendQueue[Entry.rq_robot.LED_MAP.RQ_PORT_LED_COLOR] = {
+                    cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_on_led,
+                    led : led,
+                    color : color,
+                };
+
+                return script.callReturn();
             },
         },
 
@@ -1094,7 +1015,6 @@ Entry.rq_robot.getBlocks = function() {
                     value: '1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -1108,7 +1028,14 @@ Entry.rq_robot.getBlocks = function() {
             class: 'rq_output',
             //isNotFor: ['rq_robot'],
             func(sprite, script) {
-                Entry.hw.sendQueue.STATUS_COLOR = script.getStringField('COLOR', script);
+                var led = script.getStringField('LED', script);
+
+                Entry.hw.sendQueue[Entry.rq_robot.LED_MAP.RQ_PORT_OFF_LED] = {
+                    cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_off_led,
+                    led : led,
+                };
+
+                return script.callReturn();
             },
         },
 
@@ -1168,7 +1095,6 @@ Entry.rq_robot.getBlocks = function() {
                     value: '1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -1182,7 +1108,14 @@ Entry.rq_robot.getBlocks = function() {
             class: 'rq_motion',
             //isNotFor: ['rq_robot'],
             func(sprite, script) {
-                Entry.hw.sendQueue.STATUS_COLOR = script.getStringField('COLOR', script);
+                var motion = script.getStringField('MOTION', script);
+
+                Entry.hw.sendQueue[Entry.rq_robot.MOTION_MAP.RQ_PORT_MOTION] = {
+                    cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_motion,
+                    motion : motion,
+                };
+
+                return script.callReturn();
             },
         },
     };
