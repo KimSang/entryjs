@@ -1,7 +1,7 @@
 'use strict';
 
 Entry.rq_robot = {
-    MOTOR_MAP: {
+    DC_MOTOR_MAP: {
         RQ_PORT_MOVE_DC : 'A',
         RQ_PORT_SET_DC : 'B',
         RQ_PORT_STOP : 'C',
@@ -187,7 +187,7 @@ Entry.rq_robot.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [['LEFT', '29'], ['RIGHT', '30']],
-                    value: 'LEFT',
+                    value: '29',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                 },
@@ -234,7 +234,7 @@ Entry.rq_robot.getBlocks = function() {
                 {
                     speed = 3;
                 }
-                Entry.hw.sendQueue[Entry.rq_robot.MOTOR_MAP.RQ_PORT_MOVE_DC] = {
+                Entry.hw.sendQueue[Entry.rq_robot.DC_MOTOR_MAP.RQ_PORT_MOVE_DC] = {
                     cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_move_dc_motor,
                     motor : motor,
                     direction : direction,
@@ -305,7 +305,7 @@ Entry.rq_robot.getBlocks = function() {
                     right_wheel_pos = 3;
                 }
 
-                Entry.hw.sendQueue[Entry.rq_robot.MOTOR_MAP.RQ_PORT_SET_DC] = {
+                Entry.hw.sendQueue[Entry.rq_robot.DC_MOTOR_MAP.RQ_PORT_SET_DC] = {
                     cmd: Entry.rq_robot.COMMAND_MAP.rq_cmd_set_dc_motor_position,
                     left_wheel : left_wheel_pos,
                     right_wheel : right_wheel_pos,
@@ -332,7 +332,7 @@ Entry.rq_robot.getBlocks = function() {
             //isNotFor: ['rq_robot'],
             func(sprite, script) {
 
-                Entry.hw.sendQueue[Entry.rq_robot.MOTOR_MAP.RQ_PORT_STOP] = {
+                Entry.hw.sendQueue[Entry.rq_robot.DC_MOTOR_MAP.RQ_PORT_STOP] = {
                     cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_stop_dc_motor,
                 };
 
@@ -409,7 +409,7 @@ Entry.rq_robot.getBlocks = function() {
                     sam3_motor = 28;
                 }
 
-                Entry.hw.sendQueue[Entry.rq_robot.MOTOR_MAP.RQ_PORT_MOVE_SAM3] = {
+                Entry.hw.sendQueue[Entry.rq_robot.DC_MOTOR_MAP.RQ_PORT_MOVE_SAM3] = {
                     cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_move_sam3_motor,
                     motor : sam3_motor,
                     direction : direction,
@@ -478,7 +478,7 @@ Entry.rq_robot.getBlocks = function() {
                     sam3_motor = 28;
                 }
                 
-                Entry.hw.sendQueue[Entry.rq_robot.MOTOR_MAP.RQ_PORT_MOVE_SAM3_POS] = {
+                Entry.hw.sendQueue[Entry.rq_robot.DC_MOTOR_MAP.RQ_PORT_MOVE_SAM3_POS] = {
                     cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_set_sam3_motor_position,
                     motor : sam3_motor,
                     position : position,
@@ -525,7 +525,7 @@ Entry.rq_robot.getBlocks = function() {
                     sam3_motor = 28;
                 }
 
-                Entry.hw.sendQueue[Entry.rq_robot.MOTOR_MAP.RQ_PORT_SAM3_LED] = {
+                Entry.hw.sendQueue[Entry.rq_robot.DC_MOTOR_MAP.RQ_PORT_SAM3_LED] = {
                     cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_on_sam3_led,
                     motor : sam3_motor,
                 };
@@ -573,7 +573,7 @@ Entry.rq_robot.getBlocks = function() {
                     sam3_motor = 28;
                 }
 
-                Entry.hw.sendQueue[Entry.rq_robot.MOTOR_MAP.RQ_PORT_SAM3_LED] = {
+                Entry.hw.sendQueue[Entry.rq_robot.DC_MOTOR_MAP.RQ_PORT_SAM3_LED] = {
                     cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_off_sam3_led,
                     motor : sam3_motor,
                 };
@@ -620,7 +620,7 @@ Entry.rq_robot.getBlocks = function() {
                     sam3_motor = 28;
                 }
 
-                Entry.hw.sendQueue[Entry.rq_robot.MOTOR_MAP.RQ_PORT_SAM3_MAN] = {
+                Entry.hw.sendQueue[Entry.rq_robot.DC_MOTOR_MAP.RQ_PORT_SAM3_MAN] = {
                     cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_move_sam3_motor_manual,
                     motor : sam3_motor,
                 };
@@ -632,7 +632,7 @@ Entry.rq_robot.getBlocks = function() {
         rq_get_sam3_motor_position: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
+            skeleton: 'basic_string_field',
             statements: [],
             params: [
                 {
@@ -666,7 +666,7 @@ Entry.rq_robot.getBlocks = function() {
                     sam3_motor = 28;
                 }
 
-                Entry.hw.sendQueue[Entry.rq_robot.MOTOR_MAP.RQ_PORT_GET_SAM3_POS] = {
+                Entry.hw.sendQueue[Entry.rq_robot.DC_MOTOR_MAP.RQ_PORT_GET_SAM3_POS] = {
                     cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_get_sam3_motor_position,
                     motor : sam3_motor,
                 };
@@ -928,7 +928,7 @@ Entry.rq_robot.getBlocks = function() {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
-            skeleton: 'basic_string_field',
+            skeleton: 'basic',
             statements: [],
             events: {},
             def: {
@@ -958,8 +958,8 @@ Entry.rq_robot.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['1', '1'], ['2', '2']],
-                    value: '1',
+                    options: [['1', '29'], ['2', '30']],
+                    value: '29',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                 },
@@ -972,7 +972,7 @@ Entry.rq_robot.getBlocks = function() {
                         ['REDBLUE', '3'],
                         ['OFF', '0'],
                     ],
-                    value: 'BLUE',
+                    value: '1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                 },
@@ -1011,8 +1011,8 @@ Entry.rq_robot.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['1', '1'], ['2', '2']],
-                    value: '1',
+                    options: [['1', '29'], ['2', '30']],
+                    value: '29',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                 },
