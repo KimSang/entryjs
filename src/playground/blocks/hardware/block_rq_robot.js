@@ -54,21 +54,11 @@ Entry.rq_robot = {
         'rq_cmd_motion' : 19,
     },
 
-    removeTimeout(id) {
-        clearTimeout(id);
-        var timeouts = this.timeouts;
-        var index = timeouts.indexOf(id);
-        if (index >= 0) {
-            timeouts.splice(index, 1);
-        }
+    time_sleep(delay){
+        var start = new Date().getTime();
+        while (new Date().getTime() < start + delay);
     },
-    removeAllTimeouts() {
-        var timeouts = this.timeouts;
-        for (var i in timeouts) {
-            clearTimeout(timeouts[i]);
-        }
-        this.timeouts = [];
-    },
+
     setZero() {
 
         Entry.hw.sendQueue.readablePorts = [];
@@ -920,6 +910,14 @@ Entry.rq_robot.getBlocks = function() {
                     play_list : play_list,
                     sec : sec,
                 };
+                Entry.hw.update();
+
+                Entry.rq_robot.time_sleep(Number(sec) * 1000);
+
+                Entry.hw.sendQueue[Entry.rq_robot.SOUND_MAP.RQ_PORT_STOP_SOUND] = {
+                    cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_stop_sound,
+                    stop : 1
+                };
 
                 return script.callReturn();
             },
@@ -944,6 +942,7 @@ Entry.rq_robot.getBlocks = function() {
 
                 Entry.hw.sendQueue[Entry.rq_robot.SOUND_MAP.RQ_PORT_STOP_SOUND] = {
                     cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_stop_sound,
+                    stop : 1
                 };
 
                 return script.callReturn();
