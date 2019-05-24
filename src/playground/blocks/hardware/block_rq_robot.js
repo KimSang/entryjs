@@ -319,7 +319,7 @@ Entry.rq_robot.getBlocks = function() {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
-            skeleton: 'basic_string_field',
+            skeleton: 'basic',
             statements: [],
             events: {},
             def: {
@@ -334,6 +334,7 @@ Entry.rq_robot.getBlocks = function() {
 
                 Entry.hw.sendQueue[Entry.rq_robot.DC_MOTOR_MAP.RQ_PORT_STOP] = {
                     cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_stop_dc_motor,
+                    stop : 1,
                 };
 
                 return script.callReturn();
@@ -914,8 +915,8 @@ Entry.rq_robot.getBlocks = function() {
                 var play_list = script.getStringField('PLAY_LIST', script);
                 var sec = script.getValue('SEC', script);
 
-                Entry.hw.sendQueue[Entry.rq_robot.SOUND_MAP.rq_cmd_play_sound_second] = {
-                    cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_play_sound,
+                Entry.hw.sendQueue[Entry.rq_robot.SOUND_MAP.RQ_PORT_PLAY_SOUND_SEC] = {
+                    cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_play_sound_second,
                     play_list : play_list,
                     sec : sec,
                 };
