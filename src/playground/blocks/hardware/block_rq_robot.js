@@ -456,9 +456,9 @@ Entry.rq_robot.getBlocks = function() {
                 {
                     position = 0;
                 }
-                else if( position >= 254)
+                else if( position >= 255)
                 {
-                    position = 254;
+                    position = 255;
                 }
                 if( sam3_motor <= 0)
                 {
@@ -759,8 +759,8 @@ Entry.rq_robot.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['1', '1'], ['2', '2']],
-                    value: '1',
+                    options: [['1', '0'], ['2', '2']],
+                    value: '0',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                 },
