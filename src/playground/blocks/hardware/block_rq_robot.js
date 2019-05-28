@@ -1,6 +1,6 @@
 'use strict';
 
-Entry.rq_robot = {
+Entry.RQ = {
     DC_MOTOR_MAP: {
         RQ_PORT_MOVE_DC : 'A',
         RQ_PORT_SET_DC : 'B',
@@ -32,6 +32,15 @@ Entry.rq_robot = {
         RQ_PORT_MOTION : 'R',
     },
 
+    deviceTypes : {
+        RQ_Touch_1: 1,
+        RQ_Touch_2: 2,
+        RQ_Remote: 3,
+        RQ_Sound: 4,
+        RQ_Inf_1: 5,
+        RQ_Inf_2: 6,
+    },
+
     COMMAND_MAP : {
         'rq_cmd_move_dc_motor' : 1,
         'rq_cmd_set_dc_motor_position' : 2,
@@ -60,26 +69,184 @@ Entry.rq_robot = {
     },
 
     setZero() {
+        
+        Object.keys(this.DC_MOTOR_MAP).forEach(function(port) {
+            switch(port)
+            {
+                case 'A':
+                       Entry.hw.sendQueue[port] = {
+                            cmd: 0,
+                            motor : 0,
+                            direction : 0,
+                            speed : 0,
+                       };
+                        break;
+                    case 'B':   
+                       Entry.hw.sendQueue[port] = {
+                            cmd : 0,
+                            left_wheel : 0,
+                            right_wheel : 0,
+                       }
+                       
+                        break;
+                    case 'C':
+                        Entry.hw.sendQueue[port] = {
+                            cmd : 0,
+                            stop : 0,
+                       }
+                        break;
+            }
+        });
 
-        Entry.hw.sendQueue.readablePorts = [];
-        for (var port = 0; port < 20; port++) {
-            Entry.hw.sendQueue[port] = 0;
-            Entry.hw.sendQueue.readablePorts.push(port);
+        Object.keys(this.SAM3_MOTOR).forEach(function(port) {
+            switch(port)
+            {
+                case 'D':
+                    Entry.hw.sendQueue[port] = {
+                        cmd : 0,
+                        motor : 0,
+                        direction : 0,
+                        speed : 0,
+                        };
+                    break;
+                case 'E':
+                    Entry.hw.sendQueue[port] = {
+                        cmd: 0,
+                        motor : 0,
+                        position : 0,
+                    };
+                    break;
+                case 'F':
+                    Entry.hw.sendQueue[port] = {
+                        cmd: 0,
+                        motor : 0,
+                    };
+                    break;
+                case 'G':
+                    Entry.hw.sendQueue[port] = {
+                        cmd: 0,
+                        motor : 0,
+                    };
+                    break;
+                case 'H':
+                    Entry.hw.sendQueue[port] = {
+                        cmd: 0,
+                        motor : 0,
+                    };
+                    break;
+            }
+        });
+                
+        Object.keys(this.SENSOR_MAP).forEach(function(port) {
+            switch(port)
+            {
+                case 'I':
+                    Entry.hw.sendQueue[port] = {
+                        type : this.deviceTypes.RQ_Touch_1,
+                        mode : 0,
+                    };
+                    break;
+                case 'J':
+                    Entry.hw.sendQueue[port]= {
+                        type : this.deviceTypes.RQ_Touch_2,
+                        mode : 0,
+                    };
+                    break;
+                case 'K1':
+                    Entry.hw.sendQueue[port]= {
+                        type : this.deviceTypes.RQ_Remote,
+                        mode : 0,
+                    };                  
+                    break;
+                case 'K2':
+                    Entry.hw.sendQueue[port]= {
+                        type : this.deviceTypes.RQ_Sound,
+                        mode : 0,
+                    };
+                    break;
+                case 'L1':
+                    Entry.hw.sendQueue[port]= {
+                        type : this.deviceTypes.RQ_Inf_1,
+                        mode : 0,
+                    };
+                    break;
+                case 'L2':
+                    Entry.hw.sendQueue[port]= {
+                        type : this.deviceTypes.RQ_Inf_2,
+                        mode : 0,
+                    };
+                    break;
+            }
+        });
+
+        Object.keys(this.SOUND_MAP).forEach(function(port) {
+            switch(port)
+            {
+                case 'M':
+                    Entry.hw.sendQueue[port] = {
+                        cmd: 0,
+                        play_list : null,
+                    };
+                    break;
+                case 'N':
+                    Entry.hw.sendQueue[port] = {
+                        cmd: 0,
+                        play_list : null,
+                        sec : 0,
+                    };
+                    break;
+                case 'O':
+                    Entry.hw.sendQueue[port] = {
+                        cmd : 0,
+                        stop : 0,
+                    };
+                    break;
         }
-        Entry.hw.update();
-     
+        });
+
+        Object.keys(this.LED_MAP).forEach(function(port) {
+            switch(port)
+            {
+                case 'P':
+                    Entry.hw.sendQueue[port] = {
+                        cmd: 0,
+                        led : 0,
+                        color : 0,
+                    };
+                    break;
+                case 'Q':
+                    Entry.hw.sendQueue[port] = {
+                        cmd : 0,
+                        led : 0,
+                    };
+                    break;
+            }
+        });
+
+        Object.keys(this.MOTION_MAP).forEach(function(port) {
+            switch(port)
+            {
+                case 'R':
+                    Entry.hw.sendQueue[port] = {
+                        cmd: 0,
+                        motion : 0,
+                    };
+                    break;
+            }
+        });
+    
     },
-    id: 'FFFF',
-    name: 'rq_robot',
+    id: '31.1',
+    name: 'RQ',
     url: 'https://www.robobuilder.co.kr/',
     imageName: 'rq_robot.png',
     title: {
         ko: 'RQ 로봇',
-        en: 'rq_robot',
+        en: 'RQ Robot',
     },
 };
 
-Entry.rq_robot.setLanguage = function() {
+Entry.RQ.setLanguage = function() {
     return {
         ko: {
             template: {
@@ -140,7 +307,7 @@ Entry.rq_robot.setLanguage = function() {
     };
 };
 
-Entry.rq_robot.blockMenuBlocks = [
+Entry.RQ.blockMenuBlocks = [
     'rq_move_dc_motor',
     'rq_set_dc_motor_position',
     'rq_stop_dc_motor',
@@ -166,7 +333,7 @@ Entry.rq_robot.blockMenuBlocks = [
 
     'rq_motion',
 ];
-Entry.rq_robot.getBlocks = function() {
+Entry.RQ.getBlocks = function() {
     return {
         rq_move_dc_motor: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -210,7 +377,7 @@ Entry.rq_robot.getBlocks = function() {
                 SPEED : 2,
             },
             class: 'rq_motor',
-            //isNotFor: ['rq_robot'],
+            isNotFor: ['RQ'],
             func(sprite, script) {
 
                 var motor = script.getStringField('MOTOR', script);
@@ -224,8 +391,8 @@ Entry.rq_robot.getBlocks = function() {
                 {
                     speed = 3;
                 }
-                Entry.hw.sendQueue[Entry.rq_robot.DC_MOTOR_MAP.RQ_PORT_MOVE_DC] = {
-                    cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_move_dc_motor,
+                Entry.hw.sendQueue[Entry.RQ.DC_MOTOR_MAP.RQ_PORT_MOVE_DC] = {
+                    cmd : Entry.RQ.COMMAND_MAP.rq_cmd_move_dc_motor,
                     motor : motor,
                     direction : direction,
                     speed : speed,
@@ -271,7 +438,7 @@ Entry.rq_robot.getBlocks = function() {
                 RIGHT_WHEEL_POS: 1,
             },
             class: 'rq_motor',
-            //isNotFor: ['rq_robot'],
+            isNotFor: ['RQ'],
             func(sprite, script) {
                 
                 var left_wheel_pos = script.getValue('LEFT_WHEEL_POS', script);
@@ -295,8 +462,8 @@ Entry.rq_robot.getBlocks = function() {
                     right_wheel_pos = 3;
                 }
 
-                Entry.hw.sendQueue[Entry.rq_robot.DC_MOTOR_MAP.RQ_PORT_SET_DC] = {
-                    cmd: Entry.rq_robot.COMMAND_MAP.rq_cmd_set_dc_motor_position,
+                Entry.hw.sendQueue[Entry.RQ.DC_MOTOR_MAP.RQ_PORT_SET_DC] = {
+                    cmd: Entry.RQ.COMMAND_MAP.rq_cmd_set_dc_motor_position,
                     left_wheel : left_wheel_pos,
                     right_wheel : right_wheel_pos,
                 };
@@ -319,11 +486,11 @@ Entry.rq_robot.getBlocks = function() {
                 PORT: 0,
             },
             class: 'rq_motor',
-            //isNotFor: ['rq_robot'],
+            isNotFor: ['RQ'],
             func(sprite, script) {
 
-                Entry.hw.sendQueue[Entry.rq_robot.DC_MOTOR_MAP.RQ_PORT_STOP] = {
-                    cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_stop_dc_motor,
+                Entry.hw.sendQueue[Entry.RQ.DC_MOTOR_MAP.RQ_PORT_STOP] = {
+                    cmd : Entry.RQ.COMMAND_MAP.rq_cmd_stop_dc_motor,
                     stop : 1,
                 };
 
@@ -376,7 +543,7 @@ Entry.rq_robot.getBlocks = function() {
                 SPEED : 2,
             },
             class: 'rq_sam3_motor',
-            //isNotFor: ['rq_robot'],
+            isNotFor: ['RQ'],
             func(sprite, script) {
                 var sam3_motor = script.getValue('SAM3_MOTOR', script);
                 var direction = script.getStringField('DIRECTION', script);
@@ -400,8 +567,8 @@ Entry.rq_robot.getBlocks = function() {
                     sam3_motor = 28;
                 }
 
-                Entry.hw.sendQueue[Entry.rq_robot.DC_MOTOR_MAP.RQ_PORT_MOVE_SAM3] = {
-                    cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_move_sam3_motor,
+                Entry.hw.sendQueue[Entry.RQ.DC_MOTOR_MAP.RQ_PORT_MOVE_SAM3] = {
+                    cmd : Entry.RQ.COMMAND_MAP.rq_cmd_move_sam3_motor,
                     motor : sam3_motor,
                     direction : direction,
                     speed : speed,
@@ -447,7 +614,7 @@ Entry.rq_robot.getBlocks = function() {
                 POSITION: 1,
             },
             class: 'rq_sam3_motor',
-            //isNotFor: ['rq_robot'],
+            isNotFor: ['RQ'],
             func(sprite, script) {
                 var sam3_motor = script.getValue('SAM3_MOTOR', script);
                 var position = script.getValue('POSITION', script);
@@ -469,8 +636,8 @@ Entry.rq_robot.getBlocks = function() {
                     sam3_motor = 28;
                 }
                 
-                Entry.hw.sendQueue[Entry.rq_robot.DC_MOTOR_MAP.RQ_PORT_MOVE_SAM3_POS] = {
-                    cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_set_sam3_motor_position,
+                Entry.hw.sendQueue[Entry.RQ.DC_MOTOR_MAP.RQ_PORT_MOVE_SAM3_POS] = {
+                    cmd : Entry.RQ.COMMAND_MAP.rq_cmd_set_sam3_motor_position,
                     motor : sam3_motor,
                     position : position,
                 };
@@ -503,7 +670,7 @@ Entry.rq_robot.getBlocks = function() {
                 SAM3_MOTOR: 0,
             },
             class: 'rq_sam3_motor',
-            //isNotFor: ['rq_robot'],
+            isNotFor: ['RQ'],
             func(sprite, script) {
                 var sam3_motor = script.getValue('SAM3_MOTOR', script);
                 
@@ -516,8 +683,8 @@ Entry.rq_robot.getBlocks = function() {
                     sam3_motor = 28;
                 }
 
-                Entry.hw.sendQueue[Entry.rq_robot.DC_MOTOR_MAP.RQ_PORT_SAM3_LED] = {
-                    cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_on_sam3_led,
+                Entry.hw.sendQueue[Entry.RQ.DC_MOTOR_MAP.RQ_PORT_SAM3_LED] = {
+                    cmd : Entry.RQ.COMMAND_MAP.rq_cmd_on_sam3_led,
                     motor : sam3_motor,
                 };
 
@@ -551,7 +718,7 @@ Entry.rq_robot.getBlocks = function() {
                 SAM3_MOTOR: 0,
             },
             class: 'rq_sam3_motor',
-            //isNotFor: ['rq_robot'],
+            isNotFor: ['RQ'],
             func(sprite, script) {
                 var sam3_motor = script.getValue('SAM3_MOTOR', script);
                 
@@ -564,8 +731,8 @@ Entry.rq_robot.getBlocks = function() {
                     sam3_motor = 28;
                 }
 
-                Entry.hw.sendQueue[Entry.rq_robot.DC_MOTOR_MAP.RQ_PORT_SAM3_LED] = {
-                    cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_off_sam3_led,
+                Entry.hw.sendQueue[Entry.RQ.DC_MOTOR_MAP.RQ_PORT_SAM3_LED] = {
+                    cmd : Entry.RQ.COMMAND_MAP.rq_cmd_off_sam3_led,
                     motor : sam3_motor,
                 };
 
@@ -598,7 +765,7 @@ Entry.rq_robot.getBlocks = function() {
                 SAM3_MOTOR: 0,
             },
             class: 'rq_sam3_motor',
-            //isNotFor: ['rq_robot'],
+            isNotFor: ['RQ'],
             func(sprite, script) {
                 var sam3_motor = script.getValue('SAM3_MOTOR', script);
                 
@@ -611,8 +778,8 @@ Entry.rq_robot.getBlocks = function() {
                     sam3_motor = 28;
                 }
 
-                Entry.hw.sendQueue[Entry.rq_robot.DC_MOTOR_MAP.RQ_PORT_SAM3_MAN] = {
-                    cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_move_sam3_motor_manual,
+                Entry.hw.sendQueue[Entry.RQ.DC_MOTOR_MAP.RQ_PORT_SAM3_MAN] = {
+                    cmd : Entry.RQ.COMMAND_MAP.rq_cmd_move_sam3_motor_manual,
                     motor : sam3_motor,
                 };
 
@@ -644,7 +811,7 @@ Entry.rq_robot.getBlocks = function() {
                 SAM3_MOTOR : 0,
             },
             class: 'rq_sam3_motor',
-            //isNotFor: ['rq_robot'],
+            isNotFor: ['RQ'],
             func(sprite, script) {
                 var sam3_motor = script.getValue('SAM3_MOTOR', script);
                 
@@ -657,8 +824,8 @@ Entry.rq_robot.getBlocks = function() {
                     sam3_motor = 28;
                 }
 
-                Entry.hw.sendQueue[Entry.rq_robot.DC_MOTOR_MAP.RQ_PORT_GET_SAM3_POS] = {
-                    cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_get_sam3_motor_position,
+                Entry.hw.sendQueue[Entry.RQ.DC_MOTOR_MAP.RQ_PORT_GET_SAM3_POS] = {
+                    cmd : Entry.RQ.COMMAND_MAP.rq_cmd_get_sam3_motor_position,
                     motor : sam3_motor,
                 };
 
@@ -680,9 +847,9 @@ Entry.rq_robot.getBlocks = function() {
                 PORT: 0,
             },
             class: 'rq_sensor',
-            //isNotFor: ['rq_robot'],
+            isNotFor: ['RQ'],
             func(sprite, script) {
-                var result = Entry.hw.portData[Entry.rq_robot.SENSOR_MAP.RQ_PORT_SOUND_SENSOR];
+                var result = Entry.hw.portData[Entry.RQ.SENSOR_MAP.RQ_PORT_SOUND_SENSOR];
                 return result;
             },
         },
@@ -701,9 +868,9 @@ Entry.rq_robot.getBlocks = function() {
                 PORT: 0,
             },
             class: 'rq_sensor',
-            //isNotFor: ['rq_robot'],
+            isNotFor: ['RQ'],
             func(sprite, script) {
-                var result = Entry.hw.portData[Entry.rq_robot.SENSOR_MAP.RQ_PORT_REMOTE_CONTROL];
+                var result = Entry.hw.portData[Entry.RQ.SENSOR_MAP.RQ_PORT_REMOTE_CONTROL];
                 return result;
             },
         },
@@ -717,7 +884,7 @@ Entry.rq_robot.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['1', '1'], ['2', '2']],
+                    options: [['1', '1'], ['2', '3']],
                     value: '1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -732,19 +899,19 @@ Entry.rq_robot.getBlocks = function() {
                 INF_SENSOR: 0,
             },
             class: 'rq_sensor',
-            //isNotFor: ['rq_robot'],
+            isNotFor: ['RQ'],
             func(sprite, script) {
                 
                 var port = script.getStringField('INF_SENSOR', script);
 
                 if( port == '1')
                 {
-                    var result = Entry.hw.portData[Entry.rq_robot.SENSOR_MAP.RQ_PORT_INFRARED_SENSOR_1];
+                    var result = Entry.hw.portData[Entry.RQ.SENSOR_MAP.RQ_PORT_INFRARED_SENSOR_1];
                     return result;
                 }
-                else if(port == '2')
+                else if(port == '3')
                 {
-                    var result = Entry.hw.portData[Entry.rq_robot.SENSOR_MAP.RQ_PORT_INFRARED_SENSOR_2];
+                    var result = Entry.hw.portData[Entry.RQ.SENSOR_MAP.RQ_PORT_INFRARED_SENSOR_2];
                     return result;
                 }
             },
@@ -774,19 +941,19 @@ Entry.rq_robot.getBlocks = function() {
                 TOUCH_SENSOR: 0,
             },
             class: 'rq_sensor',
-            //isNotFor: ['rq_robot'],
+            isNotFor: ['RQ'],
             func(sprite, script) {
                 
                 var port = script.getStringField('TOUCH_SENSOR', script);
 
-                if( port == '1')
+                if( port == '0')
                 {
-                    var result = Entry.hw.portData[Entry.rq_robot.SENSOR_MAP.RQ_PORT_TOUCH_SENSOR_1];
+                    var result = Entry.hw.portData[Entry.RQ.SENSOR_MAP.RQ_PORT_TOUCH_SENSOR_1];
                     return result;
                 }
                 else if(port == '2')
                 {
-                    var result = Entry.hw.portData[Entry.rq_robot.SENSOR_MAP.RQ_PORT_TOUCH_SENSOR_2];
+                    var result = Entry.hw.portData[Entry.RQ.SENSOR_MAP.RQ_PORT_TOUCH_SENSOR_2];
                     return result;
                 }
             },
@@ -841,12 +1008,12 @@ Entry.rq_robot.getBlocks = function() {
                 PLAY_LIST: 0,
             },
             class: 'rq_sound',
-            //isNotFor: ['rq_robot'],
+            isNotFor: ['RQ'],
             func(sprite, script) {
                 var play_list = script.getStringField('PLAY_LIST', script);
 
-                Entry.hw.sendQueue[Entry.rq_robot.SOUND_MAP.RQ_PORT_PLAY_SOUND] = {
-                    cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_play_sound,
+                Entry.hw.sendQueue[Entry.RQ.SOUND_MAP.RQ_PORT_PLAY_SOUND] = {
+                    cmd : Entry.RQ.COMMAND_MAP.rq_cmd_play_sound,
                     play_list : play_list,
                 };
 
@@ -900,22 +1067,22 @@ Entry.rq_robot.getBlocks = function() {
                 SEC : 1,
             },
             class: 'rq_sound',
-            //isNotFor: ['rq_robot'],
+            isNotFor: ['RQ'],
             func(sprite, script) {
                 var play_list = script.getStringField('PLAY_LIST', script);
                 var sec = script.getValue('SEC', script);
 
-                Entry.hw.sendQueue[Entry.rq_robot.SOUND_MAP.RQ_PORT_PLAY_SOUND_SEC] = {
-                    cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_play_sound_second,
+                Entry.hw.sendQueue[Entry.RQ.SOUND_MAP.RQ_PORT_PLAY_SOUND_SEC] = {
+                    cmd : Entry.RQ.COMMAND_MAP.rq_cmd_play_sound_second,
                     play_list : play_list,
                     sec : sec,
                 };
                 Entry.hw.update();
 
-                Entry.rq_robot.time_sleep(Number(sec) * 1000);
+                Entry.RQ.time_sleep(Number(sec) * 1000);
 
-                Entry.hw.sendQueue[Entry.rq_robot.SOUND_MAP.RQ_PORT_STOP_SOUND] = {
-                    cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_stop_sound,
+                Entry.hw.sendQueue[Entry.RQ.SOUND_MAP.RQ_PORT_STOP_SOUND] = {
+                    cmd : Entry.RQ.COMMAND_MAP.rq_cmd_stop_sound,
                     stop : 1
                 };
 
@@ -937,11 +1104,11 @@ Entry.rq_robot.getBlocks = function() {
                 PORT: 0,
             },
             class: 'rq_sound',
-            //isNotFor: ['rq_robot'],
+            isNotFor: ['RQ'],
             func(sprite, script) {
 
-                Entry.hw.sendQueue[Entry.rq_robot.SOUND_MAP.RQ_PORT_STOP_SOUND] = {
-                    cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_stop_sound,
+                Entry.hw.sendQueue[Entry.RQ.SOUND_MAP.RQ_PORT_STOP_SOUND] = {
+                    cmd : Entry.RQ.COMMAND_MAP.rq_cmd_stop_sound,
                     stop : 1
                 };
 
@@ -987,13 +1154,13 @@ Entry.rq_robot.getBlocks = function() {
                 COLOR: 1,
             },
             class: 'rq_output',
-            //isNotFor: ['rq_robot'],
+            isNotFor: ['RQ'],
             func(sprite, script) {
                 var led = script.getStringField('LED', script);
                 var color = script.getStringField('COLOR', script);
 
-                Entry.hw.sendQueue[Entry.rq_robot.LED_MAP.RQ_PORT_LED_COLOR] = {
-                    cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_on_led,
+                Entry.hw.sendQueue[Entry.RQ.LED_MAP.RQ_PORT_LED_COLOR] = {
+                    cmd : Entry.RQ.COMMAND_MAP.rq_cmd_on_led,
                     led : led,
                     color : color,
                 };
@@ -1026,12 +1193,12 @@ Entry.rq_robot.getBlocks = function() {
                 LED : 0,
             },
             class: 'rq_output',
-            //isNotFor: ['rq_robot'],
+            isNotFor: ['RQ'],
             func(sprite, script) {
                 var led = script.getStringField('LED', script);
 
-                Entry.hw.sendQueue[Entry.rq_robot.LED_MAP.RQ_PORT_OFF_LED] = {
-                    cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_off_led,
+                Entry.hw.sendQueue[Entry.RQ.LED_MAP.RQ_PORT_OFF_LED] = {
+                    cmd : Entry.RQ.COMMAND_MAP.rq_cmd_off_led,
                     led : led,
                 };
 
@@ -1106,12 +1273,12 @@ Entry.rq_robot.getBlocks = function() {
                 MOTION : 0,
             },
             class: 'rq_motion',
-            //isNotFor: ['rq_robot'],
+            isNotFor: ['RQ'],
             func(sprite, script) {
                 var motion = script.getStringField('MOTION', script);
 
-                Entry.hw.sendQueue[Entry.rq_robot.MOTION_MAP.RQ_PORT_MOTION] = {
-                    cmd : Entry.rq_robot.COMMAND_MAP.rq_cmd_motion,
+                Entry.hw.sendQueue[Entry.RQ.MOTION_MAP.RQ_PORT_MOTION] = {
+                    cmd : Entry.RQ.COMMAND_MAP.rq_cmd_motion,
                     motion : motion,
                 };
 
@@ -1121,4 +1288,4 @@ Entry.rq_robot.getBlocks = function() {
     };
 };
 
-module.exports = Entry.rq_robot;
+module.exports = Entry.RQ;
