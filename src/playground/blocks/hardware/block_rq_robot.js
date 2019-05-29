@@ -5,6 +5,8 @@ Entry.RQ = {
         RQ_PORT_MOVE_DC : 'A',
         RQ_PORT_SET_DC : 'B',
         RQ_PORT_STOP : 'C',
+    },
+    SAM3_MOTOR_MAP : {
         RQ_PORT_MOVE_SAM3 : 'D',
         RQ_PORT_MOVE_SAM3_POS : 'E',
         RQ_PORT_SAM3_LED : 'F',
@@ -97,6 +99,7 @@ Entry.RQ = {
                         break;
             }
         });
+        Entry.hw.update();
 
         Object.keys(this.SAM3_MOTOR).forEach(function(port) {
             switch(port)
@@ -136,7 +139,9 @@ Entry.RQ = {
                     break;
             }
         });
-                
+
+        Entry.hw.update();
+
         Object.keys(this.SENSOR_MAP).forEach(function(port) {
             switch(port)
             {
@@ -178,7 +183,9 @@ Entry.RQ = {
                     break;
             }
         });
-
+        
+        Entry.hw.update();
+        
         Object.keys(this.SOUND_MAP).forEach(function(port) {
             switch(port)
             {
@@ -204,6 +211,8 @@ Entry.RQ = {
         }
         });
 
+        Entry.hw.update();
+
         Object.keys(this.LED_MAP).forEach(function(port) {
             switch(port)
             {
@@ -223,6 +232,8 @@ Entry.RQ = {
             }
         });
 
+        Entry.hw.update();
+
         Object.keys(this.MOTION_MAP).forEach(function(port) {
             switch(port)
             {
@@ -234,9 +245,11 @@ Entry.RQ = {
                     break;
             }
         });
+
+        Entry.hw.update();
     
     },
-    id: '31.1',
+    id: '1.31',
     name: 'RQ',
     url: 'https://www.robobuilder.co.kr/',
     imageName: 'rq_robot.png',
@@ -360,6 +373,11 @@ Entry.RQ.getBlocks = function() {
                     accept: 'string',
                     defaultType: 'number',
                 },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
             ],
             events: {},
             def: {
@@ -377,7 +395,7 @@ Entry.RQ.getBlocks = function() {
                 SPEED : 2,
             },
             class: 'rq_motor',
-            isNotFor: ['RQ'],
+            //isNotFor: ['RQ'],
             func(sprite, script) {
 
                 var motor = script.getStringField('MOTOR', script);
@@ -418,6 +436,11 @@ Entry.RQ.getBlocks = function() {
                     accept: 'string',
                     defaultType: 'number',
                 },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
             ],
             events: {},
             def: {
@@ -438,7 +461,7 @@ Entry.RQ.getBlocks = function() {
                 RIGHT_WHEEL_POS: 1,
             },
             class: 'rq_motor',
-            isNotFor: ['RQ'],
+            //isNotFor: ['RQ'],
             func(sprite, script) {
                 
                 var left_wheel_pos = script.getValue('LEFT_WHEEL_POS', script);
@@ -482,11 +505,18 @@ Entry.RQ.getBlocks = function() {
             def: {
                 type: 'rq_stop_dc_motor',
             },
+            params : [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
             paramsKeyMap: {
                 PORT: 0,
             },
             class: 'rq_motor',
-            isNotFor: ['RQ'],
+            //isNotFor: ['RQ'],
             func(sprite, script) {
 
                 Entry.hw.sendQueue[Entry.RQ.DC_MOTOR_MAP.RQ_PORT_STOP] = {
@@ -521,6 +551,11 @@ Entry.RQ.getBlocks = function() {
                     accept: 'string',
                     defaultType: 'number',
                 },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
             ],
             events: {},
             def: {
@@ -543,7 +578,7 @@ Entry.RQ.getBlocks = function() {
                 SPEED : 2,
             },
             class: 'rq_sam3_motor',
-            isNotFor: ['RQ'],
+            //isNotFor: ['RQ'],
             func(sprite, script) {
                 var sam3_motor = script.getValue('SAM3_MOTOR', script);
                 var direction = script.getStringField('DIRECTION', script);
@@ -567,7 +602,7 @@ Entry.RQ.getBlocks = function() {
                     sam3_motor = 28;
                 }
 
-                Entry.hw.sendQueue[Entry.RQ.DC_MOTOR_MAP.RQ_PORT_MOVE_SAM3] = {
+                Entry.hw.sendQueue[Entry.RQ.SAM3_MOTOR_MAP.RQ_PORT_MOVE_SAM3] = {
                     cmd : Entry.RQ.COMMAND_MAP.rq_cmd_move_sam3_motor,
                     motor : sam3_motor,
                     direction : direction,
@@ -594,6 +629,11 @@ Entry.RQ.getBlocks = function() {
                     accept: 'string',
                     defaultType: 'number',
                 },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
             ],
             events: {},
             def: {
@@ -614,7 +654,7 @@ Entry.RQ.getBlocks = function() {
                 POSITION: 1,
             },
             class: 'rq_sam3_motor',
-            isNotFor: ['RQ'],
+            //isNotFor: ['RQ'],
             func(sprite, script) {
                 var sam3_motor = script.getValue('SAM3_MOTOR', script);
                 var position = script.getValue('POSITION', script);
@@ -636,7 +676,7 @@ Entry.RQ.getBlocks = function() {
                     sam3_motor = 28;
                 }
                 
-                Entry.hw.sendQueue[Entry.RQ.DC_MOTOR_MAP.RQ_PORT_MOVE_SAM3_POS] = {
+                Entry.hw.sendQueue[Entry.RQ.SAM3_MOTOR_MAP.RQ_PORT_MOVE_SAM3_POS] = {
                     cmd : Entry.RQ.COMMAND_MAP.rq_cmd_set_sam3_motor_position,
                     motor : sam3_motor,
                     position : position,
@@ -657,6 +697,11 @@ Entry.RQ.getBlocks = function() {
                     accept: 'string',
                     defaultType: 'number',
                 },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
             ],
             events: {},
             def: {
@@ -670,7 +715,7 @@ Entry.RQ.getBlocks = function() {
                 SAM3_MOTOR: 0,
             },
             class: 'rq_sam3_motor',
-            isNotFor: ['RQ'],
+            //isNotFor: ['RQ'],
             func(sprite, script) {
                 var sam3_motor = script.getValue('SAM3_MOTOR', script);
                 
@@ -683,7 +728,7 @@ Entry.RQ.getBlocks = function() {
                     sam3_motor = 28;
                 }
 
-                Entry.hw.sendQueue[Entry.RQ.DC_MOTOR_MAP.RQ_PORT_SAM3_LED] = {
+                Entry.hw.sendQueue[Entry.RQ.SAM3_MOTOR_MAP.RQ_PORT_SAM3_LED] = {
                     cmd : Entry.RQ.COMMAND_MAP.rq_cmd_on_sam3_led,
                     motor : sam3_motor,
                 };
@@ -703,6 +748,11 @@ Entry.RQ.getBlocks = function() {
                     accept: 'string',
                     defaultType: 'number',
                 },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
             ],
             events: {},
             def: {
@@ -718,7 +768,7 @@ Entry.RQ.getBlocks = function() {
                 SAM3_MOTOR: 0,
             },
             class: 'rq_sam3_motor',
-            isNotFor: ['RQ'],
+            //isNotFor: ['RQ'],
             func(sprite, script) {
                 var sam3_motor = script.getValue('SAM3_MOTOR', script);
                 
@@ -731,7 +781,7 @@ Entry.RQ.getBlocks = function() {
                     sam3_motor = 28;
                 }
 
-                Entry.hw.sendQueue[Entry.RQ.DC_MOTOR_MAP.RQ_PORT_SAM3_LED] = {
+                Entry.hw.sendQueue[Entry.RQ.SAM3_MOTOR_MAP.RQ_PORT_SAM3_LED] = {
                     cmd : Entry.RQ.COMMAND_MAP.rq_cmd_off_sam3_led,
                     motor : sam3_motor,
                 };
@@ -751,6 +801,11 @@ Entry.RQ.getBlocks = function() {
                     accept: 'string',
                     defaultType: 'number',
                 },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
 
             ],
             events: {},
@@ -765,7 +820,7 @@ Entry.RQ.getBlocks = function() {
                 SAM3_MOTOR: 0,
             },
             class: 'rq_sam3_motor',
-            isNotFor: ['RQ'],
+            //isNotFor: ['RQ'],
             func(sprite, script) {
                 var sam3_motor = script.getValue('SAM3_MOTOR', script);
                 
@@ -778,7 +833,7 @@ Entry.RQ.getBlocks = function() {
                     sam3_motor = 28;
                 }
 
-                Entry.hw.sendQueue[Entry.RQ.DC_MOTOR_MAP.RQ_PORT_SAM3_MAN] = {
+                Entry.hw.sendQueue[Entry.RQ.SAM3_MOTOR_MAP.RQ_PORT_SAM3_MAN] = {
                     cmd : Entry.RQ.COMMAND_MAP.rq_cmd_move_sam3_motor_manual,
                     motor : sam3_motor,
                 };
@@ -798,6 +853,11 @@ Entry.RQ.getBlocks = function() {
                     accept: 'string',
                     defaultType: 'number',
                 },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
             ],
             events: {},
             def: {
@@ -811,7 +871,7 @@ Entry.RQ.getBlocks = function() {
                 SAM3_MOTOR : 0,
             },
             class: 'rq_sam3_motor',
-            isNotFor: ['RQ'],
+            //isNotFor: ['RQ'],
             func(sprite, script) {
                 var sam3_motor = script.getValue('SAM3_MOTOR', script);
                 
@@ -824,7 +884,7 @@ Entry.RQ.getBlocks = function() {
                     sam3_motor = 28;
                 }
 
-                Entry.hw.sendQueue[Entry.RQ.DC_MOTOR_MAP.RQ_PORT_GET_SAM3_POS] = {
+                Entry.hw.sendQueue[Entry.RQ.SAM3_MOTOR_MAP.RQ_PORT_GET_SAM3_POS] = {
                     cmd : Entry.RQ.COMMAND_MAP.rq_cmd_get_sam3_motor_position,
                     motor : sam3_motor,
                 };
@@ -847,7 +907,7 @@ Entry.RQ.getBlocks = function() {
                 PORT: 0,
             },
             class: 'rq_sensor',
-            isNotFor: ['RQ'],
+            //isNotFor: ['RQ'],
             func(sprite, script) {
                 var result = Entry.hw.portData[Entry.RQ.SENSOR_MAP.RQ_PORT_SOUND_SENSOR];
                 return result;
@@ -868,7 +928,7 @@ Entry.RQ.getBlocks = function() {
                 PORT: 0,
             },
             class: 'rq_sensor',
-            isNotFor: ['RQ'],
+            //isNotFor: ['RQ'],
             func(sprite, script) {
                 var result = Entry.hw.portData[Entry.RQ.SENSOR_MAP.RQ_PORT_REMOTE_CONTROL];
                 return result;
@@ -899,7 +959,7 @@ Entry.RQ.getBlocks = function() {
                 INF_SENSOR: 0,
             },
             class: 'rq_sensor',
-            isNotFor: ['RQ'],
+            //isNotFor: ['RQ'],
             func(sprite, script) {
                 
                 var port = script.getStringField('INF_SENSOR', script);
@@ -941,7 +1001,7 @@ Entry.RQ.getBlocks = function() {
                 TOUCH_SENSOR: 0,
             },
             class: 'rq_sensor',
-            isNotFor: ['RQ'],
+            //isNotFor: ['RQ'],
             func(sprite, script) {
                 
                 var port = script.getStringField('TOUCH_SENSOR', script);
@@ -998,6 +1058,11 @@ Entry.RQ.getBlocks = function() {
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                 },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
             ],
             events: {},
             def: {
@@ -1008,7 +1073,7 @@ Entry.RQ.getBlocks = function() {
                 PLAY_LIST: 0,
             },
             class: 'rq_sound',
-            isNotFor: ['RQ'],
+            //isNotFor: ['RQ'],
             func(sprite, script) {
                 var play_list = script.getStringField('PLAY_LIST', script);
 
@@ -1052,6 +1117,11 @@ Entry.RQ.getBlocks = function() {
                     accept: 'string',
                     defaultType: 'number',
                 },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
             ],
             events: {},
             def: {
@@ -1067,7 +1137,7 @@ Entry.RQ.getBlocks = function() {
                 SEC : 1,
             },
             class: 'rq_sound',
-            isNotFor: ['RQ'],
+            //isNotFor: ['RQ'],
             func(sprite, script) {
                 var play_list = script.getStringField('PLAY_LIST', script);
                 var sec = script.getValue('SEC', script);
@@ -1100,11 +1170,18 @@ Entry.RQ.getBlocks = function() {
             def: {
                 type: 'rq_stop_sound',
             },
+            params : [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
             paramsKeyMap: {
                 PORT: 0,
             },
             class: 'rq_sound',
-            isNotFor: ['RQ'],
+            //isNotFor: ['RQ'],
             func(sprite, script) {
 
                 Entry.hw.sendQueue[Entry.RQ.SOUND_MAP.RQ_PORT_STOP_SOUND] = {
@@ -1143,6 +1220,11 @@ Entry.RQ.getBlocks = function() {
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                 },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
             ],
             events: {},
             def: {
@@ -1154,7 +1236,7 @@ Entry.RQ.getBlocks = function() {
                 COLOR: 1,
             },
             class: 'rq_output',
-            isNotFor: ['RQ'],
+            //isNotFor: ['RQ'],
             func(sprite, script) {
                 var led = script.getStringField('LED', script);
                 var color = script.getStringField('COLOR', script);
@@ -1183,6 +1265,11 @@ Entry.RQ.getBlocks = function() {
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                 },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
             ],
             events: {},
             def: {
@@ -1193,7 +1280,7 @@ Entry.RQ.getBlocks = function() {
                 LED : 0,
             },
             class: 'rq_output',
-            isNotFor: ['RQ'],
+            //isNotFor: ['RQ'],
             func(sprite, script) {
                 var led = script.getStringField('LED', script);
 
@@ -1263,6 +1350,11 @@ Entry.RQ.getBlocks = function() {
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                 },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
             ],
             events: {},
             def: {
@@ -1273,7 +1365,7 @@ Entry.RQ.getBlocks = function() {
                 MOTION : 0,
             },
             class: 'rq_motion',
-            isNotFor: ['RQ'],
+            //isNotFor: ['RQ'],
             func(sprite, script) {
                 var motion = script.getStringField('MOTION', script);
 
