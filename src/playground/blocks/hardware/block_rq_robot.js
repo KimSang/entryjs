@@ -210,7 +210,7 @@ Entry.RQ = {
                     break;
                 case "RQ_PORT_STOP_SOUND":
                     Entry.hw.sendQueue[port] = {
-                        cmd : Entry.RQ.COMMAND_MAP.rq_cmd_stop_sound,
+                        cmd : 0,
                         stop : 0,
                     };
                     break;
