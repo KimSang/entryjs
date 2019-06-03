@@ -12,6 +12,7 @@ Entry.RQ = {
         RQ_PORT_SAM3_LED : 'F',
         RQ_PORT_SAM3_MAN : 'G',
         RQ_PORT_GET_SAM3_POS : 'H',
+        RQ_PORT_CON_SAM3_POS : 'H1',
     },
     SENSOR_MAP : {
         RQ_PORT_SOUND_SENSOR : 'I',
@@ -53,16 +54,17 @@ Entry.RQ = {
         'rq_cmd_off_sam3_led' : 7,
         'rq_cmd_move_sam3_motor_manual' : 8,
         'rq_cmd_get_sam3_motor_position' : 9,
-        'rq_cmd_sound_sensor' : 10,
-        'rq_cmd_remote_control' : 11,
-        'rq_cmd_infrared_ray_sensor' : 12,
-        'rq_cmd_touch_sensor' : 13,
-        'rq_cmd_play_sound' : 14,
-        'rq_cmd_play_sound_second' : 15,
-        'rq_cmd_stop_sound' : 16,
-        'rq_cmd_on_led' : 17,
-        'rq_cmd_off_led' : 18,
-        'rq_cmd_motion' : 19,
+        'rq_cmd_con_sam3_motor_position' : 10,
+        'rq_cmd_sound_sensor' : 11,
+        'rq_cmd_remote_control' : 12,
+        'rq_cmd_infrared_ray_sensor' : 13,
+        'rq_cmd_touch_sensor' : 14,
+        'rq_cmd_play_sound' : 15,
+        'rq_cmd_play_sound_second' : 16,
+        'rq_cmd_stop_sound' : 17,
+        'rq_cmd_on_led' : 18,
+        'rq_cmd_off_led' : 19,
+        'rq_cmd_motion' : 20,
     },
 
     time_sleep(delay){
@@ -273,12 +275,13 @@ Entry.RQ.setLanguage = function() {
                 rq_set_dc_motor_position: '왼쪽 바퀴 %1 오른쪽 바퀴 %2 (으)로 정하기',
                 rq_stop_dc_motor: '모터 정지',
 
-                rq_move_sam3_motor: '서보 모터 %1의 회전 방향은 %2, 속도는 %3',
+                rq_move_sam3_motor: '서보 모터 %1의 속도는 %2',
                 rq_set_sam3_motor_position: '서보 모터 %1의 위치값 %2',
                 rq_on_sam3_led: '서보 모터 %1의 LED 켜기',
                 rq_off_sam3_led: '서보 모터 %1의 LED 끄기',
                 rq_move_sam3_motor_manual: '서보모터 %1 수동 동작',
                 rq_get_sam3_motor_position: '서보모터 %1의 위치값',
+                rq_con_sam3_motor_position : '서보모터 %1의 위치 확정',
 
                 rq_sound_sensor: '소리센서',
                 rq_remote_value: '리모콘값',
@@ -301,12 +304,13 @@ Entry.RQ.setLanguage = function() {
                 rq_set_dc_motor_position: '왼쪽 바퀴 %1 오른쪽 바퀴 %2 (으)로 정하기',
                 rq_stop_dc_motor: '모터 정지',
 
-                rq_move_sam3_motor: '서보 모터 %1의 회전 방향은 %2, 속도는 %3',
+                rq_move_sam3_motor: '서보 모터 %1의 속도는 %2',
                 rq_set_sam3_motor_position: '서보 모터 %1의 위치값 %2',
                 rq_on_sam3_led: '서보 모터 %1의 LED 켜기',
                 rq_off_sam3_led: '서보 모터 %1의 LED 끄기',
                 rq_move_sam3_motor_manual: '서보모터 %1 수동 동작',
                 rq_get_sam3_motor_position: '서보모터 %1의 위치값',
+                rq_con_sam3_motor_position : '서보모터 %1의 위치 확정',
 
                 rq_sound_sensor: '소리센서',
                 rq_remote_value: '리모콘값',
@@ -337,6 +341,7 @@ Entry.RQ.blockMenuBlocks = [
     'rq_off_sam3_led',
     'rq_move_sam3_motor_manual',
     'rq_get_sam3_motor_position',
+    'rq_con_sam3_motor_position',
 
     'rq_sound_sensor',
     'rq_remote_value',
@@ -407,9 +412,9 @@ Entry.RQ.getBlocks = function() {
                 var motor = script.getStringField('MOTOR', script);
                 var direction = script.getStringField('DIRECTION', script);
                 var speed = script.getValue('SPEED', script);
-                if( speed <= -3)
+                if( speed <= 0)
                 {
-                    speed = -3;
+                    speed = 0;
                 }
                 else if( speed >= 3)
                 {
@@ -546,13 +551,6 @@ Entry.RQ.getBlocks = function() {
                     defaultType: 'number',
                 },
                 {
-                    type: 'Dropdown',
-                    options: [['CW', '4'], ['CCW', '3']],
-                    value: '4',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                },
-                {
                     type: 'Block',
                     accept: 'string',
                     defaultType: 'number',
@@ -570,7 +568,6 @@ Entry.RQ.getBlocks = function() {
                         type:"number",
                         params : ["0"]
                     },
-                    null,
                     {
                         type:"number",
                         params : ["0"]
@@ -587,7 +584,7 @@ Entry.RQ.getBlocks = function() {
             isNotFor: ['RQ'],
             func(sprite, script) {
                 var sam3_motor = script.getValue('SAM3_MOTOR', script);
-                var direction = script.getStringField('DIRECTION', script);
+                var direction = 0;
                 var speed = script.getValue('SPEED', script);
 
                 if( speed <= -5)
@@ -606,6 +603,14 @@ Entry.RQ.getBlocks = function() {
                 else if( sam3_motor >= 28)
                 {
                     sam3_motor = 28;
+                }
+
+                if( speed <= 0)
+                {
+                    direction = 3;
+                }
+                else{
+                    direction = 4;
                 }
 
                 Entry.hw.sendQueue[Entry.RQ.SAM3_MOTOR_MAP.RQ_PORT_MOVE_SAM3] = {
@@ -847,7 +852,7 @@ Entry.RQ.getBlocks = function() {
                 return script.callReturn();
             },
         },
-
+        
         rq_get_sam3_motor_position: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -892,6 +897,57 @@ Entry.RQ.getBlocks = function() {
 
                 Entry.hw.sendQueue[Entry.RQ.SAM3_MOTOR_MAP.RQ_PORT_GET_SAM3_POS] = {
                     cmd : Entry.RQ.COMMAND_MAP.rq_cmd_get_sam3_motor_position,
+                    motor : sam3_motor,
+                };
+
+                return script.callReturn();
+            },
+        },
+
+        rq_con_sam3_motor_position: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [{
+                    type : "number",
+                    params : ["0"],
+                }],
+                type: 'rq_con_sam3_motor_position',
+            },
+            paramsKeyMap: {
+                SAM3_MOTOR : 0,
+            },
+            class: 'rq_sam3_motor',
+            isNotFor: ['RQ'],
+            func(sprite, script) {
+                var sam3_motor = script.getValue('SAM3_MOTOR', script);
+                
+                if( sam3_motor <= 0)
+                {
+                    sam3_motor = 0;
+                }
+                else if( sam3_motor >= 28)
+                {
+                    sam3_motor = 28;
+                }
+
+                Entry.hw.sendQueue[Entry.RQ.SAM3_MOTOR_MAP.RQ_PORT_CON_SAM3_POS] = {
+                    cmd : Entry.RQ.COMMAND_MAP.rq_cmd_con_sam3_motor_position,
                     motor : sam3_motor,
                 };
 
@@ -945,7 +1001,7 @@ Entry.RQ.getBlocks = function() {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
-            skeleton: 'basic_boolean_field',
+            skeleton: 'basic_string_field',
             statements: [],
             params: [
                 {
@@ -1310,7 +1366,7 @@ Entry.RQ.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['button A', 0x01],
+                        ['button A', '1'],
                         ['button B', '2'],
                         ['button ↙', '3'],
                         ['button ↑', '4'],
