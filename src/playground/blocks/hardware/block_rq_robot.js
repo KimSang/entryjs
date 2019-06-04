@@ -12,6 +12,7 @@ Entry.RQ = {
         RQ_PORT_SAM3_LED : 'F',
         RQ_PORT_SAM3_MAN : 'G',
         RQ_PORT_GET_SAM3_POS : 'H',
+        RQ_PORT_GET_SAM3_POS_READ : 'HR',
         RQ_PORT_CON_SAM3_POS : 'H1',
     },
     SENSOR_MAP : {
@@ -74,186 +75,12 @@ Entry.RQ = {
 
     setZero() {
         
-        Object.keys(this.DC_MOTOR_MAP).forEach(function(port) {
-            switch(port)
-            {
-                case "RQ_PORT_MOVE_DC":
-                       Entry.hw.sendQueue[port] = {
-                            cmd: 0,
-                            motor : 0,
-                            direction : 0,
-                            speed : 0,
-                       };
-                        break;
-                case "RQ_PORT_SET_DC":   
-                    Entry.hw.sendQueue[port] = {
-                        cmd : 0,
-                        left_wheel : 0,
-                        right_wheel : 0,
-                    }
-                    
-                    break;
-                case "RQ_PORT_STOP":
-                    Entry.hw.sendQueue[port] = {
-                        cmd : 0,
-                        stop : 0,
-                    }
-                    break;
-            }
-        });
-        Entry.hw.update();
-
-        Object.keys(this.SAM3_MOTOR_MAP).forEach(function(port) {
-            switch(port)
-            {
-                case "RQ_PORT_MOVE_SAM3":
-                    Entry.hw.sendQueue[port] = {
-                        cmd : 0,
-                        motor : 0,
-                        direction : 0,
-                        speed : 0,
-                        };
-                    break;
-                case "RQ_PORT_MOVE_SAM3_POS":
-                    Entry.hw.sendQueue[port] = {
-                        cmd: 0,
-                        motor : 0,
-                        position : 0,
-                    };
-                    break;
-                case "RQ_PORT_SAM3_LED":
-                    Entry.hw.sendQueue[port] = {
-                        cmd: 0,
-                        motor : 0,
-                    };
-                    break;
-                case "RQ_PORT_SAM3_MAN":
-                    Entry.hw.sendQueue[port] = {
-                        cmd: 0,
-                        motor : 0,
-                    };
-                    break;
-                case "RQ_PORT_GET_SAM3_POS":
-                    Entry.hw.sendQueue[port] = {
-                        cmd: 0,
-                        motor : 0,
-                    };
-                    break;
-            }
-        });
-
-        Entry.hw.update();
-
-        Object.keys(this.SENSOR_MAP).forEach(function(port) {
-            switch(port)
-            {
-                case "RQ_PORT_SOUND_SENSOR":
-                    Entry.hw.sendQueue[port] = {
-                        type : Entry.RQ.deviceTypes.RQ_Touch_1,
-                        mode : 0,
-                        value : 0,
-                    };
-                    break;
-                case "RQ_PORT_REMOTE_CONTROL":
-                    Entry.hw.sendQueue[port]= {
-                        type : Entry.RQ.deviceTypes.RQ_Touch_2,
-                        mode : 0,
-                        value : 0,
-                    };
-                    break;
-                case "RQ_PORT_INFRARED_SENSOR_1":
-                    Entry.hw.sendQueue[port]= {
-                        type : Entry.RQ.deviceTypes.RQ_Remote,
-                        mode : 0,
-                        value : 0,
-                    };                  
-                    break;
-                case "RQ_PORT_INFRARED_SENSOR_2":
-                    Entry.hw.sendQueue[port]= {
-                        type : Entry.RQ.deviceTypes.RQ_Sound,
-                        mode : 0,
-                        value : 0,
-                    };
-                    break;
-                case "RQ_PORT_TOUCH_SENSOR_1":
-                    Entry.hw.sendQueue[port]= {
-                        type : Entry.RQ.deviceTypes.RQ_Inf_1,
-                        mode : 0,
-                        value : 0,
-                    };
-                    break;
-                case "RQ_PORT_TOUCH_SENSOR_2":
-                    Entry.hw.sendQueue[port]= {
-                        type : Entry.RQ.deviceTypes.RQ_Inf_2,
-                        mode : 0,
-                        value : 0,
-                    };
-                    break;
-            }
-        });
+        Entry.hw.sendQueue[Entry.RQ.DC_MOTOR_MAP.RQ_PORT_SET_DC] = {
+            cmd: Entry.RQ.COMMAND_MAP.rq_cmd_set_dc_motor_position,
+            left_wheel : 0,
+            right_wheel : 0,
+        };
         
-        Entry.hw.update();
-        
-        Object.keys(this.SOUND_MAP).forEach(function(port) {
-            switch(port)
-            {
-                case "RQ_PORT_PLAY_SOUND":
-                    Entry.hw.sendQueue[port] = {
-                        cmd: 0,
-                        play_list : null,
-                    };
-                    break;
-                case "RQ_PORT_PLAY_SOUND_SEC":
-                    Entry.hw.sendQueue[port] = {
-                        cmd: 0,
-                        play_list : null,
-                        sec : 0,
-                    };
-                    break;
-                case "RQ_PORT_STOP_SOUND":
-                    Entry.hw.sendQueue[port] = {
-                        cmd : 0,
-                        stop : 0,
-                    };
-                    break;
-        }
-        });
-
-        Entry.hw.update();
-
-        Object.keys(this.LED_MAP).forEach(function(port) {
-            switch(port)
-            {
-                case "RQ_PORT_LED_COLOR":
-                    Entry.hw.sendQueue[port] = {
-                        cmd: 0,
-                        led : 0,
-                        color : 0,
-                    };
-                    break;
-                case "RQ_PORT_OFF_LED":
-                    Entry.hw.sendQueue[port] = {
-                        cmd : 0,
-                        led : 0,
-                    };
-                    break;
-            }
-        });
-
-        Entry.hw.update();
-
-        Object.keys(this.MOTION_MAP).forEach(function(port) {
-            switch(port)
-            {
-                case "RQ_PORT_MOTION":
-                    Entry.hw.sendQueue[port] = {
-                        cmd: 0,
-                        motion : 0,
-                    };
-                    break;
-            }
-        });
-
         Entry.hw.update();
     
     },
@@ -427,7 +254,7 @@ Entry.RQ.getBlocks = function() {
                     speed : speed,
                 };
                 
-                return script.callReturn();
+                return script;
             },
         },
 
@@ -502,7 +329,7 @@ Entry.RQ.getBlocks = function() {
                     right_wheel : right_wheel_pos,
                 };
 
-                return script.callReturn();
+                return script;
             },
         },
 
@@ -535,7 +362,7 @@ Entry.RQ.getBlocks = function() {
                     stop : 1,
                 };
 
-                return script.callReturn();
+                return script;
             },
         },
 
@@ -577,8 +404,7 @@ Entry.RQ.getBlocks = function() {
             },
             paramsKeyMap: {
                 SAM3_MOTOR: 0,
-                DIRECTION: 1,
-                SPEED : 2,
+                SPEED : 1,
             },
             class: 'rq_sam3_motor',
             isNotFor: ['RQ'],
@@ -620,7 +446,7 @@ Entry.RQ.getBlocks = function() {
                     speed : speed,
                 };
 
-                return script.callReturn();
+                return script;
             },
         },
 
@@ -693,7 +519,7 @@ Entry.RQ.getBlocks = function() {
                     position : position,
                 };
 
-                return script.callReturn();
+                return script;
             },
         },
 
@@ -744,7 +570,7 @@ Entry.RQ.getBlocks = function() {
                     motor : sam3_motor,
                 };
 
-                return script.callReturn();
+                return script;
             },
         },
 
@@ -797,7 +623,7 @@ Entry.RQ.getBlocks = function() {
                     motor : sam3_motor,
                 };
 
-                return script.callReturn();
+                return script;
             },
         },
 
@@ -849,7 +675,7 @@ Entry.RQ.getBlocks = function() {
                     motor : sam3_motor,
                 };
 
-                return script.callReturn();
+                return script;
             },
         },
         
@@ -885,6 +711,8 @@ Entry.RQ.getBlocks = function() {
             isNotFor: ['RQ'],
             func(sprite, script) {
                 var sam3_motor = script.getValue('SAM3_MOTOR', script);
+                var result;
+                var sevo_pos = 0;
                 
                 if( sam3_motor <= 0)
                 {
@@ -898,9 +726,20 @@ Entry.RQ.getBlocks = function() {
                 Entry.hw.sendQueue[Entry.RQ.SAM3_MOTOR_MAP.RQ_PORT_GET_SAM3_POS] = {
                     cmd : Entry.RQ.COMMAND_MAP.rq_cmd_get_sam3_motor_position,
                     motor : sam3_motor,
+                    mode : 1,
                 };
 
-                return script.callReturn();
+                Entry.hw.update();
+                Entry.RQ.time_sleep(3000);
+
+                result = Entry.hw.portData[Entry.RQ.SAM3_MOTOR_MAP.RQ_PORT_GET_SAM3_POS_READ];
+                if( result.motor == sam3_motor)
+                {
+                    sevo_pos = result.value;
+                }
+
+                return sevo_pos;
+
             },
         },
 
@@ -951,7 +790,7 @@ Entry.RQ.getBlocks = function() {
                     motor : sam3_motor,
                 };
 
-                return script.callReturn();
+                return script;
             },
         },
      
@@ -1025,17 +864,27 @@ Entry.RQ.getBlocks = function() {
             func(sprite, script) {
                 
                 var port = script.getStringField('INF_SENSOR', script);
+                var result = 0;
+                var inf_value = 0;
 
                 if( port == '1')
                 {
-                    var result = Entry.hw.portData[Entry.RQ.SENSOR_MAP.RQ_PORT_INFRARED_SENSOR_1];
-                    return result;
+                    result = Entry.hw.portData[Entry.RQ.SENSOR_MAP.RQ_PORT_INFRARED_SENSOR_1];
+                    if( result.type == Entry.RQ.deviceTypes.RQ_Inf_1)
+                    {
+                        inf_value = result.value;
+                    }
                 }
                 else if(port == '3')
                 {
-                    var result = Entry.hw.portData[Entry.RQ.SENSOR_MAP.RQ_PORT_INFRARED_SENSOR_2];
-                    return result;
+                    result = Entry.hw.portData[Entry.RQ.SENSOR_MAP.RQ_PORT_INFRARED_SENSOR_2];
+                    if( result.type == Entry.RQ.deviceTypes.RQ_Inf_2)
+                    {
+                        inf_value = result.value;
+                    }
                 }
+
+                return inf_value;
             },
         },
 
@@ -1067,17 +916,27 @@ Entry.RQ.getBlocks = function() {
             func(sprite, script) {
                 
                 var port = script.getStringField('TOUCH_SENSOR', script);
+                var result;
+                var touch_value = 0;
 
                 if( port == '0')
                 {
-                    var result = Entry.hw.portData[Entry.RQ.SENSOR_MAP.RQ_PORT_TOUCH_SENSOR_1];
-                    return result;
+                    result = Entry.hw.portData[Entry.RQ.SENSOR_MAP.RQ_PORT_TOUCH_SENSOR_1];
+                    if(result.type == Entry.RQ.deviceTypes.RQ_Touch_1)
+                    {
+                        touch_value = (result.value == 0)?0:1;
+                    }
                 }
                 else if(port == '2')
                 {
-                    var result = Entry.hw.portData[Entry.RQ.SENSOR_MAP.RQ_PORT_TOUCH_SENSOR_2];
-                    return result;
+                    result = Entry.hw.portData[Entry.RQ.SENSOR_MAP.RQ_PORT_TOUCH_SENSOR_2];
+                    if(result.type == Entry.RQ.deviceTypes.RQ_Touch_2)
+                    {
+                        touch_value = (result.value == 0)?0:1;
+                    }
                 }
+
+                return touch_value;
             },
         },
 
@@ -1144,7 +1003,7 @@ Entry.RQ.getBlocks = function() {
                     play_list : play_list,
                 };
 
-                return script.callReturn();
+                return script;
             },
         },
 
@@ -1204,6 +1063,11 @@ Entry.RQ.getBlocks = function() {
                 var play_list = script.getStringField('PLAY_LIST', script);
                 var sec = script.getValue('SEC', script);
 
+                if( sec >= 10)
+                {
+                    sec = 10;
+                }
+
                 Entry.hw.sendQueue[Entry.RQ.SOUND_MAP.RQ_PORT_PLAY_SOUND_SEC] = {
                     cmd : Entry.RQ.COMMAND_MAP.rq_cmd_play_sound_second,
                     play_list : play_list,
@@ -1219,7 +1083,7 @@ Entry.RQ.getBlocks = function() {
                     stop : 1
                 };
 
-                return script.callReturn();
+                return script;
             },
         },
 
@@ -1252,7 +1116,7 @@ Entry.RQ.getBlocks = function() {
                     stop : 1
                 };
 
-                return script.callReturn();
+                return script;
             },
         },
 
@@ -1310,7 +1174,7 @@ Entry.RQ.getBlocks = function() {
                     color : color,
                 };
 
-                return script.callReturn();
+                return script;
             },
         },
 
@@ -1352,7 +1216,7 @@ Entry.RQ.getBlocks = function() {
                     led : led,
                 };
 
-                return script.callReturn();
+                return script;
             },
         },
 
@@ -1437,7 +1301,7 @@ Entry.RQ.getBlocks = function() {
                     motion : motion,
                 };
 
-                return script.callReturn();
+                return script;
             },
         },
     };
