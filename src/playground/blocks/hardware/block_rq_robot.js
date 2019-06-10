@@ -11,7 +11,6 @@ Entry.RQ = {
         RQ_PORT_MOVE_SAM3_POS : 'E',
         RQ_PORT_SAM3_LED : 'F',
         RQ_PORT_SAM3_MAN : 'G',
-        RQ_PORT_GET_SAM3_POS : 'H',
         RQ_PORT_GET_SAM3_POS_READ : 'HR',
         RQ_PORT_CON_SAM3_POS : 'H1',
     },
@@ -74,11 +73,32 @@ Entry.RQ = {
     },
 
     setZero() {
-        
+
+        Object.values(Entry.RQ.DC_MOTOR_MAP).forEach(function(port) {
+            Entry.hw.sendQueue[port] = 0;
+        });
+        Object.values(Entry.RQ.SAM3_MOTOR_MAP).forEach(function(port) {
+            Entry.hw.sendQueue[port] = 0;
+        });
+        Object.values(Entry.RQ.SOUND_MAP).forEach(function(port) {
+            Entry.hw.sendQueue[port] = 0;
+        });
+        Object.values(Entry.RQ.LED_MAP).forEach(function(port) {
+            Entry.hw.sendQueue[port] = 0;
+        });
+        Object.values(Entry.RQ.MOTION_MAP).forEach(function(port) {
+            Entry.hw.sendQueue[port] = 0;
+        });
+ 
         Entry.hw.sendQueue[Entry.RQ.DC_MOTOR_MAP.RQ_PORT_SET_DC] = {
             cmd: Entry.RQ.COMMAND_MAP.rq_cmd_set_dc_motor_position,
             left_wheel : 0,
             right_wheel : 0,
+        };
+
+        Entry.hw.sendQueue[Entry.RQ.MOTION_MAP.RQ_PORT_MOTION] = {
+            cmd : Entry.RQ.COMMAND_MAP.rq_cmd_motion,
+            motion : 0,
         };
         
         Entry.hw.update();
@@ -254,7 +274,7 @@ Entry.RQ.getBlocks = function() {
                     speed : speed,
                 };
                 
-                return script;
+                return script.callReturn();
             },
         },
 
@@ -329,7 +349,7 @@ Entry.RQ.getBlocks = function() {
                     right_wheel : right_wheel_pos,
                 };
 
-                return script;
+                return script.callReturn();
             },
         },
 
@@ -362,7 +382,7 @@ Entry.RQ.getBlocks = function() {
                     stop : 1,
                 };
 
-                return script;
+                return script.callReturn();
             },
         },
 
@@ -443,10 +463,10 @@ Entry.RQ.getBlocks = function() {
                     cmd : Entry.RQ.COMMAND_MAP.rq_cmd_move_sam3_motor,
                     motor : sam3_motor,
                     direction : direction,
-                    speed : speed,
+                    speed : Math.abs(speed),
                 };
 
-                return script;
+                return script.callReturn();
             },
         },
 
@@ -519,7 +539,7 @@ Entry.RQ.getBlocks = function() {
                     position : position,
                 };
 
-                return script;
+                return script.callReturn();
             },
         },
 
@@ -570,7 +590,7 @@ Entry.RQ.getBlocks = function() {
                     motor : sam3_motor,
                 };
 
-                return script;
+                return script.callReturn();
             },
         },
 
@@ -623,7 +643,7 @@ Entry.RQ.getBlocks = function() {
                     motor : sam3_motor,
                 };
 
-                return script;
+                return script.callReturn();
             },
         },
 
@@ -675,7 +695,7 @@ Entry.RQ.getBlocks = function() {
                     motor : sam3_motor,
                 };
 
-                return script;
+                return script.callReturn();
             },
         },
         
@@ -723,19 +743,16 @@ Entry.RQ.getBlocks = function() {
                     sam3_motor = 28;
                 }
 
-                Entry.hw.sendQueue[Entry.RQ.SAM3_MOTOR_MAP.RQ_PORT_GET_SAM3_POS] = {
-                    cmd : Entry.RQ.COMMAND_MAP.rq_cmd_get_sam3_motor_position,
-                    motor : sam3_motor,
-                    mode : 1,
-                };
-
-                Entry.hw.update();
-                Entry.RQ.time_sleep(3000);
-
                 result = Entry.hw.portData[Entry.RQ.SAM3_MOTOR_MAP.RQ_PORT_GET_SAM3_POS_READ];
-                if( result.motor == sam3_motor)
+                if(result !== undefined )
                 {
-                    sevo_pos = result.value;
+                    if( result.motor == sam3_motor)
+                    {
+                        sevo_pos = result.value;
+                    }
+                }
+                else{
+                    sevo_pos = 0;
                 }
 
                 return sevo_pos;
@@ -790,7 +807,7 @@ Entry.RQ.getBlocks = function() {
                     motor : sam3_motor,
                 };
 
-                return script;
+                return script.callReturn();
             },
         },
      
@@ -811,6 +828,16 @@ Entry.RQ.getBlocks = function() {
             isNotFor: ['RQ'],
             func(sprite, script) {
                 var result = Entry.hw.portData[Entry.RQ.SENSOR_MAP.RQ_PORT_SOUND_SENSOR];
+                var sound_value = 0;
+
+                if( result != undefined)
+                {
+                    if(result.type == Entry.RQ.deviceTypes.RQ_Sound)
+                    {
+                        sound_value = result.value;
+                    }
+                }
+
                 return result;
             },
         },
@@ -924,7 +951,7 @@ Entry.RQ.getBlocks = function() {
                     result = Entry.hw.portData[Entry.RQ.SENSOR_MAP.RQ_PORT_TOUCH_SENSOR_1];
                     if(result.type == Entry.RQ.deviceTypes.RQ_Touch_1)
                     {
-                        touch_value = (result.value == 0)?0:1;
+                        touch_value = (result.value == 0)?false:true;
                     }
                 }
                 else if(port == '2')
@@ -932,7 +959,7 @@ Entry.RQ.getBlocks = function() {
                     result = Entry.hw.portData[Entry.RQ.SENSOR_MAP.RQ_PORT_TOUCH_SENSOR_2];
                     if(result.type == Entry.RQ.deviceTypes.RQ_Touch_2)
                     {
-                        touch_value = (result.value == 0)?0:1;
+                        touch_value = (result.value == 0)?false:true;
                     }
                 }
 
@@ -1003,7 +1030,7 @@ Entry.RQ.getBlocks = function() {
                     play_list : play_list,
                 };
 
-                return script;
+                return script.callReturn();
             },
         },
 
@@ -1083,7 +1110,7 @@ Entry.RQ.getBlocks = function() {
                     stop : 1
                 };
 
-                return script;
+                return script.callReturn();
             },
         },
 
@@ -1116,7 +1143,7 @@ Entry.RQ.getBlocks = function() {
                     stop : 1
                 };
 
-                return script;
+                return script.callReturn();
             },
         },
 
@@ -1174,7 +1201,7 @@ Entry.RQ.getBlocks = function() {
                     color : color,
                 };
 
-                return script;
+                return script.callReturn();
             },
         },
 
@@ -1216,7 +1243,7 @@ Entry.RQ.getBlocks = function() {
                     led : led,
                 };
 
-                return script;
+                return script.callReturn();
             },
         },
 
@@ -1301,7 +1328,7 @@ Entry.RQ.getBlocks = function() {
                     motion : motion,
                 };
 
-                return script;
+                return script.callReturn();
             },
         },
     };
