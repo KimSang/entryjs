@@ -87,7 +87,7 @@ Entry.RQ = {
         Object.values(Entry.RQ.MOTION_MAP).forEach(function(port) {
             Entry.hw.sendQueue[port] = 0;
         });
- 
+
         Entry.hw.sendQueue[Entry.RQ.DC_MOTOR_MAP.RQ_PORT_SET_DC] = {
             cmd: Entry.RQ.COMMAND_MAP.rq_cmd_set_dc_motor_position,
             left_wheel : 0,
@@ -107,6 +107,10 @@ Entry.RQ = {
         Entry.hw.update();
 
         Object.values(Entry.RQ.SOUND_MAP).forEach(function(port) {
+            Entry.hw.sendQueue[port] = 0;
+        });
+
+        Object.values(Entry.RQ.DC_MOTOR_MAP).forEach(function(port) {
             Entry.hw.sendQueue[port] = 0;
         });
     
