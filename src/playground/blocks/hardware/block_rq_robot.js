@@ -80,9 +80,7 @@ Entry.RQ = {
         Object.values(Entry.RQ.SAM3_MOTOR_MAP).forEach(function(port) {
             Entry.hw.sendQueue[port] = 0;
         });
-        Object.values(Entry.RQ.SOUND_MAP).forEach(function(port) {
-            Entry.hw.sendQueue[port] = 0;
-        });
+
         Object.values(Entry.RQ.LED_MAP).forEach(function(port) {
             Entry.hw.sendQueue[port] = 0;
         });
@@ -100,8 +98,17 @@ Entry.RQ = {
             cmd : Entry.RQ.COMMAND_MAP.rq_cmd_motion,
             motion : 0,
         };
+
+        Entry.hw.sendQueue[Entry.RQ.SOUND_MAP.RQ_PORT_STOP_SOUND] = {
+            cmd : Entry.RQ.COMMAND_MAP.rq_cmd_stop_sound,
+            stop : 1
+        };
         
         Entry.hw.update();
+
+        Object.values(Entry.RQ.SOUND_MAP).forEach(function(port) {
+            Entry.hw.sendQueue[port] = 0;
+        });
     
     },
     id: '31.1',
@@ -838,7 +845,7 @@ Entry.RQ.getBlocks = function() {
                     }
                 }
 
-                return result;
+                return sound_value;
             },
         },
 
