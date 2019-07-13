@@ -77,6 +77,7 @@ Entry.RQ = {
         Object.values(Entry.RQ.DC_MOTOR_MAP).forEach(function(port) {
             Entry.hw.sendQueue[port] = 0;
         });
+        
         Object.values(Entry.RQ.SAM3_MOTOR_MAP).forEach(function(port) {
             Entry.hw.sendQueue[port] = 0;
         });
@@ -753,7 +754,7 @@ Entry.RQ.getBlocks = function() {
                 {
                     sam3_motor = 28;
                 }
-
+                
                 result = Entry.hw.portData[Entry.RQ.SAM3_MOTOR_MAP.RQ_PORT_GET_SAM3_POS_READ];
                 if(result !== undefined )
                 {
