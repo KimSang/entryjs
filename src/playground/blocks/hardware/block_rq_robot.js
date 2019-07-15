@@ -909,17 +909,23 @@ Entry.RQ.getBlocks = function() {
                 if( port == '1')
                 {
                     result = Entry.hw.portData[Entry.RQ.SENSOR_MAP.RQ_PORT_INFRARED_SENSOR_1];
-                    if( result.type == Entry.RQ.deviceTypes.RQ_Inf_1)
+                    if(result != undefined)
                     {
-                        inf_value = result.value;
+                        if( result.type == Entry.RQ.deviceTypes.RQ_Inf_1)
+                        {
+                            inf_value = result.value;
+                        }
                     }
                 }
                 else if(port == '3')
                 {
                     result = Entry.hw.portData[Entry.RQ.SENSOR_MAP.RQ_PORT_INFRARED_SENSOR_2];
-                    if( result.type == Entry.RQ.deviceTypes.RQ_Inf_2)
+                    if(result != undefined)
                     {
-                        inf_value = result.value;
+                        if( result.type == Entry.RQ.deviceTypes.RQ_Inf_2)
+                        {
+                            inf_value = result.value;
+                        }
                     }
                 }
 
@@ -961,17 +967,24 @@ Entry.RQ.getBlocks = function() {
                 if( port == '0')
                 {
                     result = Entry.hw.portData[Entry.RQ.SENSOR_MAP.RQ_PORT_TOUCH_SENSOR_1];
-                    if(result.type == Entry.RQ.deviceTypes.RQ_Touch_1)
+                    if(result != undefined)
                     {
-                        touch_value = (result.value == 0)?false:true;
+                        if(result.type == Entry.RQ.deviceTypes.RQ_Touch_1)
+                        {
+                            touch_value = (result.value == 0)?false:true;
+                        }
                     }
                 }
                 else if(port == '2')
                 {
                     result = Entry.hw.portData[Entry.RQ.SENSOR_MAP.RQ_PORT_TOUCH_SENSOR_2];
-                    if(result.type == Entry.RQ.deviceTypes.RQ_Touch_2)
+                    
+                    if(result != undefined)
                     {
-                        touch_value = (result.value == 0)?false:true;
+                        if(result.type == Entry.RQ.deviceTypes.RQ_Touch_2)
+                        {
+                            touch_value = (result.value == 0)?false:true;
+                        }
                     }
                 }
 
